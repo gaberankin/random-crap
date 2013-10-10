@@ -11,5 +11,5 @@ This is, of course, before i learned that IE10 introduced MessageChannels (micro
 
 flask-proj
 ----------
-This is me, messing around with a python web framework called [flask](http://flask.pocoo.org/), as well as experimenting with the peewee database interface.  I don't get to do much python, so this was a fun jaunt down whatever.
+This is me, messing around with a python web framework called [flask](http://flask.pocoo.org/), as well as experimenting with the [peewee database interface](https://github.com/coleifer/peewee).  I don't get to do much python, so this was a fun jaunt down whatever.
 
