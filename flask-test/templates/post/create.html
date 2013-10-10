@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Create Post{% endblock %}
+{% block head %}
+	{{ super() }}
+	<!-- put css or js here -->
+{% endblock %}
+{% block content %}
+	<h1>Create Post</h1>
+	{% if error %}
+		<div class="error">{{ error }}</div>
+	{% endif %}
+	<form action="" method="post">
+		<div class="row">
+			<label for="body">Post Text</label>
+			<textarea id="body" name="body"></textarea>
+		</div>
+		<div class="row">
+			<button type="submit">Submit</button>
+		</div>
+	</form>
+{% endblock %}

@@ -1,0 +1,35 @@
+body {
+	font-family: Arial, Helvetica, Verdana;
+	font-size:100%;
+	font-size:1em;
+	margin:0;
+	padding:0;
+}
+#container {
+	width:1024px;
+	margin: 0 auto;
+}
+#sidebar {
+	width:300px;
+	float:left;
+	padding-bottom:1px;
+}
+#content {
+	width: 724px;
+	float:left;
+	padding-bottom:1px;
+}
+
+#content form .row {
+	padding:5px;
+}
+#content form .row label {
+	display:block;
+}
+#content form .row textarea, #content form .row input[type='text'] {
+	padding:4px;
+	width:300px;
+}
+#content form .row textarea {
+	height:150px;
+}
