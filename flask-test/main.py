@@ -7,9 +7,11 @@ app.secret_key = 'this is my secret key.  i have shoes that are not good for dan
 app.jinja_env.globals.update(helpers = helpers)
 
 
-@app.route("/")
-def index():
-	return render_template('index.html')
+@app.route("/", defaults={'page': 1})
+@app.route("/<int:page>")
+def index(page):
+	posts = Post.select().paginate(page, 25)
+	return render_template('index.html', posts = posts)
 
 @app.route("/post/<int:post_id>")
 def show_post(post_id):
