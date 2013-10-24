@@ -1,10 +1,10 @@
 from flask import abort, flash, Flask, redirect, render_template, request, url_for
 from db import Post
-import functions as helpers
+import functions as helpers, datetime
 
 app = Flask(__name__)
 app.secret_key = 'this is my secret key.  i have shoes that are not good for dancing'
-app.jinja_env.globals.update(helpers = helpers)
+app.jinja_env.globals.update(helpers = helpers) #register the helper functions.
 
 
 @app.route("/", defaults={'page': 1})
