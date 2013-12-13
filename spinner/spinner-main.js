@@ -15,17 +15,17 @@ function arrowKeyUpdate(e)
 {
 	'use strict';
 	var k = e.which;
+	var $me = $(e.currentTarget);
+	var v = parseInt($me.val());
 
 	if(k == 38)
 	{
-		var v = $(this).val() * 1;
-		$(this).val(v + 1);
+		$me.val(v + 1);
 		e.preventDefault();
 	}
 	else if(k == 40)
 	{
-		var v = $(this).val() * 1;
-		$(this).val(v - 1);
+		$me.val(v - 1);
 		e.preventDefault();
 	}
 }
