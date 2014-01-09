@@ -1,0 +1,39 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'search',
+1 verbose cli   'coffee' ]
+2 info using npm@1.1.32
+3 info using node@v0.8.0
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose config file C:\Users\gabe\.npmrc
+6 verbose config file C:\Program Files\nodejs\etc\npmrc
+7 verbose config file C:\Program Files\nodejs\node_modules\npm\npmrc
+8 verbose url raw /-/all/since?stale=update_after&startkey=1341367747000
+9 verbose url resolving [ 'https://registry.npmjs.org/',
+9 verbose url resolving   './-/all/since?stale=update_after&startkey=1341367747000' ]
+10 verbose url resolved https://registry.npmjs.org/-/all/since?stale=update_after&startkey=1341367747000
+11 http GET https://registry.npmjs.org/-/all/since?stale=update_after&startkey=1341367747000
+12 error Error: SSL Error: CERT_UNTRUSTED
+12 error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\main.js:409:26)
+12 error     at ClientRequest.g (events.js:185:14)
+12 error     at ClientRequest.EventEmitter.emit (events.js:88:17)
+12 error     at HTTPParser.parserOnIncomingClient [as onIncoming] (http.js:1445:7)
+12 error     at HTTPParser.parserOnHeadersComplete [as onHeadersComplete] (http.js:111:23)
+12 error     at CleartextStream.socketOnData [as ondata] (http.js:1356:20)
+12 error     at CleartextStream.CryptoStream._push (tls.js:396:27)
+12 error     at SecurePair.cycle (tls.js:751:20)
+12 error     at EncryptedStream.CryptoStream.write (tls.js:131:13)
+12 error     at Socket.ondata (stream.js:38:26)
+12 error  [Error: SSL Error: CERT_UNTRUSTED]
+13 error You may report this log at:
+13 error     <http://github.com/isaacs/npm/issues>
+13 error or email it to:
+13 error     <npm-@googlegroups.com>
+14 error System Windows_NT 6.1.7601
+15 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "search" "coffee"
+16 error cwd C:\Users\gabe\work\canvas
+17 error node -v v0.8.0
+18 error npm -v 1.1.32
+19 error message SSL Error: CERT_UNTRUSTED
+20 verbose exit [ 1, true ]
