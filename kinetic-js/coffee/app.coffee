@@ -1,11 +1,24 @@
 @initCanvas = () ->
+	canvas_width = 600
+	canvas_height = 100
 	stage = new Kinetic.Stage {
 		container: 'c',
-		width: 600,
-		height: 100
+		width: canvas_width,
+		height: canvas_height
 	}
 
-	layer = new Kinetic.Layer()
+	text_layer = new Kinetic.Layer({id:'text-layer'})
+
+	for i in [0..canvas_width] by 100
+		t = new Kinetic.Text {
+			text: i,
+			align: 'right',
+			fill: 'black',
+			x: 0, y: i
+		}
+		text_layer.add t
+
+	rect_layer = new Kinetic.Layer({id:'rect-layer'})
 
 	rect = new Kinetic.Rect {
 		x: 20, y: 20,
@@ -24,11 +37,15 @@
 	rect.on 'mouseover', ->
 		@setOpacity 1
 		document.body.style.cursor = 'pointer'
-		layer.draw()
+		rect_layer.draw()
 	rect.on 'mouseout', ->
 		@setOpacity 0.4
 		document.body.style.cursor = 'default'
-		layer.draw()
+		rect_layer.draw()
 
-	layer.add rect
-	stage.add layer
+
+	rect_layer.add rect
+
+	stage.add text_layer
+	stage.add rect_layer
+	stage
