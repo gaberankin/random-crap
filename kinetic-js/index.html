@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="js/kinetic.js"></script>
+		<script type="text/javascript" src="js/TimelineStage.js"></script>
 		<script type="text/javascript" src="js/app.js"></script>
 		<script type="text/javascript" charset="utf-8">var stage=null;</script>
 	</head>
 	<body>
 		<div id="c" width="600" height="100"></div><br />
-		<a href="#" onclick="stage = initCanvas(); return false;">Init canvas</a>
+		<a href="#" onclick="stage = initCanvas({height:100, duration: 10000}); return false;">Init canvas</a>
 	</body>
 </html>
