@@ -74,8 +74,23 @@ class @TimelineStage
 
 	addRect: (x) ->
 		me = @
-		rect = new Kinetic.Rect
+		group = new Kinetic.Group
+			name: 'rect-group'
 			x: x
+			y: 0
+			width: 50
+			height: @opts.height
+			draggable: true
+			dragBoundFunc: (pos) ->
+				x: if pos.x >= 0 then pos.x else 0
+				y: @getAbsolutePosition().y
+		delete_button = new Kinetic.Text
+			text: 'X'
+			x: x + 50
+			y: 0
+			fill: 'black'
+		rect = new Kinetic.Rect
+			x: 0
 			y: 0
 			width: 50
 			height: @opts.height
@@ -83,21 +98,24 @@ class @TimelineStage
 			stroke: 'black'
 			strokeWidth: 2
 			opacity: @opts.rectOpacity
-			draggable: true
-			dragBoundFunc: (pos) ->
-				x: if pos.x >= 0 then pos.x else 0
-				y: @getAbsolutePosition().y
 
-		rect.on 'mouseover', ->
+		group.on 'mouseover', ->
 			@setOpacity me.opts.rectHoverOpacity
 			document.body.style.cursor = 'pointer'
 			me.rect_layer.draw()
-		rect.on 'mouseout', ->
+		group.on 'mouseout', ->
 			@setOpacity me.opts.rectOpacity
 			document.body.style.cursor = 'default'
 			me.rect_layer.draw()
 
-		@rect_layer.add rect
+		delete_button.on 'click', ->
+			group.destroy()
+			me.rect_layer.draw()
+
+		group.add rect
+		group.add delete_button
+
+		@rect_layer.add group
 		@rect_layer.draw()
 		rect
 
@@ -108,3 +126,6 @@ class @TimelineStage
 
 	calcWidth: (width, duration, pxPerSecond) ->
 		if width != null then width else (duration / 1000) * pxPerSecond
+
+	formatSeconds: (seconds) ->
+		seconds

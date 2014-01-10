@@ -85,17 +85,14 @@
     }
 
     TimelineStage.prototype.addRect = function(x) {
-      var me, rect;
+      var delete_button, group, me, rect;
       me = this;
-      rect = new Kinetic.Rect({
+      group = new Kinetic.Group({
+        name: 'rect-group',
         x: x,
         y: 0,
         width: 50,
         height: this.opts.height,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 2,
-        opacity: this.opts.rectOpacity,
         draggable: true,
         dragBoundFunc: function(pos) {
           return {
@@ -104,23 +101,44 @@
           };
         }
       });
-      rect.on('mouseover', function() {
+      delete_button = new Kinetic.Text({
+        text: 'X',
+        x: x + 50,
+        y: 0,
+        fill: 'black'
+      });
+      rect = new Kinetic.Rect({
+        x: 0,
+        y: 0,
+        width: 50,
+        height: this.opts.height,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 2,
+        opacity: this.opts.rectOpacity
+      });
+      group.on('mouseover', function() {
         this.setOpacity(me.opts.rectHoverOpacity);
         document.body.style.cursor = 'pointer';
         return me.rect_layer.draw();
       });
-      rect.on('mouseout', function() {
+      group.on('mouseout', function() {
         this.setOpacity(me.opts.rectOpacity);
         document.body.style.cursor = 'default';
         return me.rect_layer.draw();
       });
-      this.rect_layer.add(rect);
+      delete_button.on('click', function() {
+        group.destroy();
+        return me.rect_layer.draw();
+      });
+      group.add(rect);
+      group.add(delete_button);
+      this.rect_layer.add(group);
       this.rect_layer.draw();
       return rect;
     };
 
     TimelineStage.prototype.moveLine = function(x) {
-      console.log(this.line.text.getWidth());
       this.line.text.setText(x);
       this.line.group.setX(x);
       return this.line.layer.batchDraw();
@@ -132,6 +150,10 @@
       } else {
         return (duration / 1000) * pxPerSecond;
       }
+    };
+
+    TimelineStage.prototype.formatSeconds = function(seconds) {
+      return seconds;
     };
 
     return TimelineStage;
