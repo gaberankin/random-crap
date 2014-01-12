@@ -85,56 +85,10 @@
     }
 
     TimelineStage.prototype.addRect = function(x) {
-      var delete_button, group, me, rect;
-      me = this;
-      group = new Kinetic.Group({
-        name: 'rect-group',
-        x: x,
-        y: 0,
-        width: 50,
-        height: this.opts.height,
-        draggable: true,
-        dragBoundFunc: function(pos) {
-          return {
-            x: pos.x >= 0 ? pos.x : 0,
-            y: this.getAbsolutePosition().y
-          };
-        }
-      });
-      delete_button = new Kinetic.Text({
-        text: 'X',
-        x: x + 50,
-        y: 0,
-        fill: 'black'
-      });
-      rect = new Kinetic.Rect({
-        x: 0,
-        y: 0,
-        width: 50,
-        height: this.opts.height,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 2,
-        opacity: this.opts.rectOpacity
-      });
-      group.on('mouseover', function() {
-        this.setOpacity(me.opts.rectHoverOpacity);
-        document.body.style.cursor = 'pointer';
-        return me.rect_layer.draw();
-      });
-      group.on('mouseout', function() {
-        this.setOpacity(me.opts.rectOpacity);
-        document.body.style.cursor = 'default';
-        return me.rect_layer.draw();
-      });
-      delete_button.on('click', function() {
-        group.destroy();
-        return me.rect_layer.draw();
-      });
-      group.add(rect);
-      group.add(delete_button);
-      this.rect_layer.add(group);
-      this.rect_layer.draw();
+      var rect;
+      rect = new TimelineSegment(this.rect_layer, jQuery.extend({
+        x: x
+      }, this.opts));
       return rect;
     };
 
