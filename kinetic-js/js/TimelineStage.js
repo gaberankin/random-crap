@@ -8,7 +8,8 @@
       widthPerSecond: 100,
       rectOpacity: 0.4,
       rectHoverOpacity: 0.8,
-      container: 'c'
+      container: 'c',
+      mouseMove: function(arg1, arg2, arg3) {}
     };
 
     TimelineStage.prototype.stage = null;
@@ -17,11 +18,12 @@
 
     TimelineStage.prototype.rect_layer = null;
 
-    TimelineStage.prototype.line = {
+    TimelineStage.prototype.pos = {
       layer: null,
       group: null,
       text: null,
-      shape: null
+      shape: null,
+      padding: 3
     };
 
     function TimelineStage(config) {
@@ -50,37 +52,41 @@
       this.rect_layer = new Kinetic.Layer({
         id: 'rect-layer'
       });
-      this.line.layer = new Kinetic.Layer({
-        id: 'line-layer'
+      this.pos.layer = new Kinetic.Layer({
+        id: 'pos-layer'
       });
-      this.line.group = new Kinetic.Group({
-        id: 'line-group',
+      this.pos.group = new Kinetic.Group({
+        id: 'pos-group',
         x: 0,
         y: 0
       });
-      this.line.text = new Kinetic.Text({
-        id: 'line-text',
+      this.pos.text = new Kinetic.Text({
+        id: 'pos-text',
         text: '',
         fill: 'black',
-        x: 0,
-        y: 0
+        x: this.pos.padding + 1,
+        y: this.pos.padding + 1
       });
-      this.line.shape = new Kinetic.Line({
-        id: 'line-shape',
-        points: [[1, 0], [1, this.opts.height]],
+      this.pos.shape = new Kinetic.Rect({
+        id: 'pos-shape',
+        width: 50,
+        height: 15,
+        fill: '#BBF',
         stroke: 'black',
-        strokeWidth: 1
+        strokeWidth: 1,
+        x: 1,
+        y: 1
       });
-      this.line.layer.add(this.line.group);
-      this.line.group.add(this.line.shape);
-      this.line.group.add(this.line.text);
-      this.stage.add(this.line.layer);
+      this.pos.layer.add(this.pos.group);
+      this.pos.group.add(this.pos.shape);
+      this.pos.group.add(this.pos.text);
+      this.stage.add(this.pos.layer);
       this.stage.add(this.rect_layer);
       this.stage.add(this.text_layer);
       this.addRect(0);
       me = this;
       this.stage.on('contentMousemove', function() {
-        return me.moveLine(this.pointerPos.x);
+        return me.movePosMarker(this.pointerPos.x);
       });
     }
 
@@ -92,10 +98,16 @@
       return rect;
     };
 
-    TimelineStage.prototype.moveLine = function(x) {
-      this.line.text.setText(x);
-      this.line.group.setX(x);
-      return this.line.layer.batchDraw();
+    TimelineStage.prototype.movePosMarker = function(x) {
+      var sw, tw, w;
+      this.pos.text.setText(x);
+      tw = this.pos.text.getWidth();
+      sw = this.stage.getWidth();
+      w = ((this.pos.padding + 1) * 2) + tw;
+      this.pos.shape.setWidth(w);
+      this.pos.shape.setHeight(((this.pos.padding + 1) * 2) + this.pos.text.getHeight());
+      this.pos.group.setX(x + w > sw ? sw - w : x);
+      return this.pos.layer.batchDraw();
     };
 
     TimelineStage.prototype.calcWidth = function(width, duration, pxPerSecond) {

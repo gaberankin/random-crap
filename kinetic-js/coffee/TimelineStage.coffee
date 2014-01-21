@@ -7,15 +7,17 @@ class @TimelineStage
 		rectOpacity: 0.4	#between 0 and 1
 		rectHoverOpacity: 0.8	#between 0 and 1
 		container: 'c'		#DOM id of element to contain the stage
+		mouseMove: (arg1, arg2, arg3) ->
 
 	stage: null
 	text_layer: null
 	rect_layer: null
-	line:
+	pos:
 		layer: null
 		group: null
 		text: null
 		shape: null
+		padding: 3
 
 	constructor: (@config) ->
 		@opts = jQuery.extend @opts, @config
@@ -40,28 +42,32 @@ class @TimelineStage
 			id:'rect-layer'
 
 		#set up the line that moves with the mouse cursor
-		@line.layer = new Kinetic.Layer
-			id: 'line-layer'
-		@line.group = new Kinetic.Group 
-			id: 'line-group'
+		@pos.layer = new Kinetic.Layer
+			id: 'pos-layer'
+		@pos.group = new Kinetic.Group 
+			id: 'pos-group'
 			x: 0
 			y: 0
-		@line.text = new Kinetic.Text
-			id: 'line-text'
+		@pos.text = new Kinetic.Text
+			id: 'pos-text'
 			text: ''
 			fill: 'black'
-			x: 0
-			y: 0
-		@line.shape = new Kinetic.Line
-			id: 'line-shape'
-			points: [[1,0], [1, @opts.height]]
+			x: @pos.padding + 1
+			y: @pos.padding + 1
+		@pos.shape = new Kinetic.Rect
+			id: 'pos-shape'
+			width: 50
+			height: 15
+			fill: '#BBF'
 			stroke: 'black'
 			strokeWidth: 1
-		@line.layer.add @line.group
-		@line.group.add @line.shape
-		@line.group.add @line.text
+			x: 1
+			y: 1
+		@pos.layer.add @pos.group
+		@pos.group.add @pos.shape
+		@pos.group.add @pos.text
 
-		@stage.add @line.layer
+		@stage.add @pos.layer
 		@stage.add @rect_layer
 		@stage.add @text_layer
 
@@ -70,7 +76,7 @@ class @TimelineStage
 
 		me = @
 		@stage.on 'contentMousemove', ->
-			me.moveLine @.pointerPos.x
+			me.movePosMarker @.pointerPos.x
 
 	addRect: (x) ->
 		rect = new TimelineSegment @rect_layer, jQuery.extend { x: x }, @opts
@@ -120,10 +126,15 @@ class @TimelineStage
 		# @rect_layer.draw()
 		rect
 
-	moveLine: (x) ->
-		@line.text.setText x
-		@line.group.setX x
-		@line.layer.batchDraw()
+	movePosMarker: (x) ->
+		@pos.text.setText x
+		tw = @pos.text.getWidth()
+		sw = @stage.getWidth()
+		w = ((@pos.padding + 1) * 2) + tw
+		@pos.shape.setWidth w
+		@pos.shape.setHeight ((@pos.padding + 1) * 2) + @pos.text.getHeight()
+		@pos.group.setX if x + w > sw then sw - w else x
+		@pos.layer.batchDraw()
 
 	calcWidth: (width, duration, pxPerSecond) ->
 		if width != null then width else (duration / 1000) * pxPerSecond
