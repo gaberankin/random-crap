@@ -8,7 +8,18 @@ class @TimelineSegment
 	group: null
 	shape: null
 	delete_btn: null
-	handles: [null, null]
+	handles: 
+		east: 
+			shape: null
+			curX: 
+				abs: 0
+				rel: 0
+		west:
+			shape: null
+			curX:
+				abs: 0
+				rel: 0
+	handleSize: 8
 
 	constructor: (@layer, config) ->
 		me = @
@@ -38,37 +49,127 @@ class @TimelineSegment
 			stroke: 'black'
 			strokeWidth: 2
 			opacity: @opts.rectOpacity
+		@shape.on 'mouseover', ->
+			document.body.style.cursor = 'col-resize'
+		@shape.on 'mouseout', ->
+			document.body.style.cursor = 'default'
 		@group.on 'mouseover', ->
 			@setOpacity me.opts.rectHoverOpacity
-			document.body.style.cursor = 'pointer'
 			me.layer.draw()
 		@group.on 'mouseout', ->
 			@setOpacity me.opts.rectOpacity
+			me.layer.draw()
+
+		@delete_button.on 'mouseover', ->
+			@setFill 'red'
+			document.body.style.cursor = 'pointer'
+		@delete_button.on 'mouseout', ->
+			@setFill 'black'
 			document.body.style.cursor = 'default'
-			me.layer.draw()
-
 		@delete_button.on 'click', ->
-			me.group.destroy()
-			me.layer.draw()
+			if confirm 'Really delete this break?'
+				me.group.destroy()
+				me.layer.draw()
 
-		@handles[0] = new Kinetic.Rect
-			x: -2,
-			y: (@opts.height / 2) - 2
-			width: 4
-			height: 4
-			fill: 'blue'
-		@handles[1] = new Kinetic.Rect
-			x: w - 2,
-			y: (@opts.height / 2) - 2
-			width: 4
-			height: 4
-			fill: 'blue'
+		@handles.west.shape = new Kinetic.Rect jQuery.extend @handleOpts('west'),
+			x: -1 * (@handleSize / 2)
+		@handles.east.shape = new Kinetic.Rect jQuery.extend @handleOpts('east'),
+			x: w - (@handleSize / 2)
+
+		@handles.west.shape.on 'mouseover', ->
+			@setFill 'red'
+			document.body.style.cursor = 'w-resize';
+			me.layer.draw()
+		@handles.west.shape.on 'mouseout', ->
+			@setFill 'blue'
+			document.body.style.cursor = 'default';
+			me.layer.draw()
+		@handles.west.shape.on 'dragmove', @dragMoveCallback @handles.west.shape
+		@handles.west.shape.on 'dragstart', ->
+			me.handles.west.curX.abs = me.handles.west.shape.getAbsolutePosition().x;
+			me.handles.west.curX.rel = me.handles.west.shape.getX();
+			me.handles.east.curX.abs = me.handles.east.shape.getAbsolutePosition().x;
+			me.handles.east.curX.rel = me.handles.east.shape.getX();
+		@handles.east.shape.on 'mouseover', ->
+			@setFill 'red'
+			document.body.style.cursor = 'e-resize';
+			me.layer.draw()
+		@handles.east.shape.on 'mouseout', ->
+			@setFill 'blue'
+			document.body.style.cursor = 'default';
+			me.layer.draw()
+		@handles.east.shape.on 'dragmove', @dragMoveCallback @handles.east.shape
+		@handles.east.shape.on 'dragstart', ->
+			me.handles.west.curX.abs = me.handles.west.shape.getAbsolutePosition().x;
+			me.handles.west.curX.rel = me.handles.west.shape.getX();
+			me.handles.east.curX.abs = me.handles.east.shape.getAbsolutePosition().x;
+			me.handles.east.curX.rel = me.handles.east.shape.getX();
 
 
 		@group.add @shape
 		@group.add @delete_button
-		@group.add @handles[0]
-		@group.add @handles[1]
+		@group.add @handles.west.shape
+		@group.add @handles.east.shape
 
 		@layer.add @group
 		@layer.draw()
+
+	handleOpts: (name) ->
+		me = @
+		boundFunc = (pos) ->
+		switch name
+			when 'east'
+				boundFunc = (pos) ->
+					west = me.handles.west.shape.getAbsolutePosition().x
+					x: if pos.x > me.handles.west.shape.getAbsolutePosition().x then pos.x else (west + 1)
+					y: @getAbsolutePosition().y
+			when 'west'
+				boundFunc = (pos) ->
+					east = me.handles.east.shape.getAbsolutePosition().x
+					x: if pos.x >= 0 and pos.x < east then pos.x else (if pos.x <= 0 then 0 else east - 1)
+					y: @getAbsolutePosition().y
+
+		width: @handleSize
+		height: @handleSize
+		y: (@opts.height / 2) - (@handleSize / 2)
+		fill: 'blue'
+		name: name
+		draggable: true
+		dragBoundFunc: boundFunc
+
+	dragMoveCallback: (handle) ->
+		func = ->	#defaults to blank function
+		me = @
+		switch handle.getName()
+			when 'east'
+				func = ->
+					west = me.handles.west.shape.getAbsolutePosition().x - me.handleSize / 2
+					east = @getAbsolutePosition().x - me.handleSize / 2
+					dist = east - west;
+					me.shape.setWidth dist
+					me.group.setWidth dist
+
+					shape_width = me.shape.getWidth()
+					delete_width = me.delete_button.getWidth()
+					me.delete_button.setX shape_width - delete_width
+					return
+			when 'west'
+				func = ->
+					west = @getAbsolutePosition().x - me.handleSize / 2
+					east = me.handles.east.shape.getAbsolutePosition().x - me.handleSize / 2
+					me.shape.setWidth east - west
+					# me.shape.setX west
+					me.group.setWidth east - west
+					me.group.setX west
+					# me.handles.east.shape.setX 
+					$('#debug').text(me.handles.east.curX.abs + ', ' + east + ', ' + (me.handles.west.curX.abs - west))
+					new_east = me.handles.east.curX.rel + (me.handles.west.curX.abs - west)
+					me.handles.east.shape.setX new_east
+
+					shape_width = me.shape.getWidth()
+					delete_width = me.delete_button.getWidth()
+					me.delete_button.setX shape_width - delete_width
+
+					return
+		return func
+			
