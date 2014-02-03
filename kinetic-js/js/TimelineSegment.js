@@ -66,9 +66,15 @@
         y: 0,
         width: w,
         height: this.opts.height,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 2,
+        fillLinearGradientStartPoint: {
+          x: 0,
+          y: 0
+        },
+        fillLinearGradientEndPoint: {
+          x: 0,
+          y: this.opts.height
+        },
+        fillLinearGradientColorStops: [0, '#00ff00', 0.5, '#00aa00', 1, '#008800'],
         opacity: this.opts.rectOpacity
       });
       this.shape.on('mouseover', function() {
@@ -210,6 +216,7 @@
             me.group.setWidth(east - west);
             me.group.setX(west);
             $('#debug').text(me.handles.east.curX.abs + ', ' + east + ', ' + (me.handles.west.curX.abs - west));
+            $('#debug2').text(east);
             new_east = me.handles.east.curX.rel + (me.handles.west.curX.abs - west);
             me.handles.east.shape.setX(new_east);
             shape_width = me.shape.getWidth();

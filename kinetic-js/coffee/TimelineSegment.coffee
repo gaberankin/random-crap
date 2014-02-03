@@ -45,9 +45,16 @@ class @TimelineSegment
 			y: 0
 			width: w
 			height: @opts.height
-			fill: 'green'
-			stroke: 'black'
-			strokeWidth: 2
+			# fill: 'green'
+			fillLinearGradientStartPoint:
+				x: 0
+				y: 0
+			fillLinearGradientEndPoint:
+				x: 0
+				y: @opts.height
+			fillLinearGradientColorStops: [0, '#00ff00', 0.5, '#00aa00', 1, '#008800']
+			# stroke: 'black'
+			# strokeWidth: 2
 			opacity: @opts.rectOpacity
 		@shape.on 'mouseover', ->
 			document.body.style.cursor = 'col-resize'
@@ -163,6 +170,7 @@ class @TimelineSegment
 					me.group.setX west
 					# me.handles.east.shape.setX 
 					$('#debug').text(me.handles.east.curX.abs + ', ' + east + ', ' + (me.handles.west.curX.abs - west))
+					$('#debug2').text(east)
 					new_east = me.handles.east.curX.rel + (me.handles.west.curX.abs - west)
 					me.handles.east.shape.setX new_east
 
