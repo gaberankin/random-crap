@@ -11,6 +11,10 @@
 
     Timeline.prototype.xAxis = null;
 
+    Timeline.prototype.groups = {
+      xAxis: null
+    };
+
     Timeline.prototype.duration = 0;
 
     Timeline.prototype.segments = [];
@@ -34,15 +38,12 @@
         this.container.attr('id', 't-' + this.randID());
       }
       this.d3Element = d3.select('#' + this.container.attr('id'));
-      this.x = d3.time.scale().domain([new Date('2014-01-01 00:00:00'), d3.time.second.offset(new Date('2014-01-01 00:00:00'), seconds)]).rangeRound([0, this.container.width() - this.margin.left - this.margin.right]);
-      this.xAxis = d3.svg.axis().scale(this.x).orient('bottom').ticks(d3.time.seconds, 100000).tickFormat(d3.time.format('%H:%M:%S.%L'));
+      this.svg = this.d3Element.append('svg');
+      this.svg.attr('width', this.container.width()).attr('height', this.container.height());
+      this.svg.append('g').attr('transform', "translate(" + this.margin.left + "," + this.margin.top + ")").attr('id', 'idontknow');
       if (seconds > 0) {
         this.setDuration(seconds);
       }
-      this.svg = this.d3Element.append('svg');
-      this.svg.attr('width', this.container.width()).attr('height', this.container.height());
-      this.svg.append('g').attr('transform', "translate(" + this.margin.left + "," + this.margin.top + ")");
-      this.svg.append('g').attr('class', 'x axis').attr('transform', "translate(0, " + (this.container.height() - this.margin.top - this.margin.bottom) + ")").call(this.xAxis);
     }
 
     Timeline.prototype.addSegment = function(segment) {
@@ -50,8 +51,13 @@
     };
 
     Timeline.prototype.setDuration = function(seconds) {
-      this.duration = 1000;
-      return this.x.range([0, this.duration]);
+      this.duration = seconds;
+      this.x = d3.time.scale().domain([new Date('2014-01-01 00:00:00'), d3.time.second.offset(new Date('2014-01-01 00:00:00'), this.duration)]).range([0, this.duration]);
+      this.xAxis = d3.svg.axis().scale(this.x).orient('bottom').ticks(d3.time.seconds, 100000).tickFormat(d3.time.format('%H:%M:%S.%L'));
+      if (this.groups.xAxis === null) {
+        this.groups.xAxis = this.svg.append('g').attr('class', 'x axis').attr('id', 'x-axis-group').attr('transform', "translate(0, " + (this.container.height() - this.margin.top - this.margin.bottom) + ")");
+      }
+      this.groups.xAxis.call(this.xAxis);
     };
 
     Timeline.prototype.randID = function() {
