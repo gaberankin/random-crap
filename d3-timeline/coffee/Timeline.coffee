@@ -6,6 +6,8 @@ class @Timeline
 	xAxis: null
 	groups: 
 		xAxis: null
+		segments: null
+	drag: null
 	duration: 0
 	segments: []
 	margin:
@@ -25,14 +27,35 @@ class @Timeline
 
 		@svg = @d3Element.append('svg')
 		@svg.attr('width', @container.width()).attr('height', @container.height())
-		@svg.append('g')
+		@groups.segments = @svg.append('g')
     		.attr('transform', "translate(#{@margin.left},#{@margin.top})")
-    		.attr('id', 'idontknow')
+    		.attr('id', "segments-#{@container.attr('id')}")
 
 		if seconds > 0
 			@setDuration seconds
 
-	addSegment: (segment) ->
+		@drag = d3.behavior.drag()
+			.on 'dragstart', ->
+				console.log 'drag start', @, arguments
+				return
+			.on 'drag', ->
+				console.log 'drag', @, arguments
+				return
+			.on 'dragend', ->
+				console.log 'drag end', @, arguments
+				return
+
+	addSegment: (x, width) ->
+		id = "rect-#{@container.attr('id')}"
+		segment = @groups.segments.append('rect')
+			.attr('class', 'timesegment')
+			.attr('id', id)
+			.attr('x', x)
+			.attr('y', 0)
+			.attr('width', width)
+			.attr('height', @container.height())
+			.call(@drag)
+		
 		@segments.push(segment)
 		return
 

@@ -12,8 +12,11 @@
     Timeline.prototype.xAxis = null;
 
     Timeline.prototype.groups = {
-      xAxis: null
+      xAxis: null,
+      segments: null
     };
+
+    Timeline.prototype.drag = null;
 
     Timeline.prototype.duration = 0;
 
@@ -40,13 +43,23 @@
       this.d3Element = d3.select('#' + this.container.attr('id'));
       this.svg = this.d3Element.append('svg');
       this.svg.attr('width', this.container.width()).attr('height', this.container.height());
-      this.svg.append('g').attr('transform', "translate(" + this.margin.left + "," + this.margin.top + ")").attr('id', 'idontknow');
+      this.groups.segments = this.svg.append('g').attr('transform', "translate(" + this.margin.left + "," + this.margin.top + ")").attr('id', "segments-" + (this.container.attr('id')));
       if (seconds > 0) {
         this.setDuration(seconds);
       }
+      this.drag = d3.behavior.drag().on('dragstart', function() {
+        console.log('drag start', this, arguments);
+      }).on('drag', function() {
+        console.log('drag', this, arguments);
+      }).on('dragend', function() {
+        console.log('drag end', this, arguments);
+      });
     }
 
-    Timeline.prototype.addSegment = function(segment) {
+    Timeline.prototype.addSegment = function(x, width) {
+      var id, segment;
+      id = "rect-" + (this.container.attr('id'));
+      segment = this.groups.segments.append('rect').attr('class', 'timesegment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.container.height()).call(this.drag);
       this.segments.push(segment);
     };
 
