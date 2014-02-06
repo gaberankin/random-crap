@@ -1,28 +1,19 @@
-.chart {
-	font-family: Arial, sans-serif;
-	font-size: 10px;
-}
-
-.axis path, .axis line {
-	fill: none;
-	stroke: #000;
-	shape-rendering: crispEdges;
-}
-
-.bar {
-	fill: steelblue;
-}
-.tick {
-	font-family: Arial, sans-serif;
-	font-size: 10px;
-}
-
-svg .time-segment {
-	fill: rgba(239, 233, 43, 0.7);
-	cursor: col-resize;
-}
-svg .segment-dragging {
-	fill: rgba(20, 255, 145, 0.9);
-	stroke: rgba(20, 255, 145, 1);
-	stroke-width: 1;
-}
+svg.timeline {
+  font-family: Arial, sans-serif;
+  font-size: 10px; }
+  svg.timeline .axis path, svg.timeline .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges; }
+  svg.timeline .bar {
+    fill: steelblue; }
+  svg.timeline .tick {
+    font-family: Arial, sans-serif;
+    font-size: 10px; }
+  svg.timeline .time-segment {
+    fill: rgba(239, 233, 43, 0.7);
+    cursor: col-resize; }
+  svg.timeline .segment-dragging {
+    fill: rgba(20, 255, 145, 0.9);
+    stroke: #14ff91;
+    stroke-width: 1; }

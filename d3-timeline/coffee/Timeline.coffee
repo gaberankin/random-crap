@@ -49,17 +49,17 @@ class @Timeline
 				d3.select(this).classed('segment-dragging', false)
 				return
 		@behaviors.zoom = d3.behavior.zoom()
-			.scaleExtent([1, 10])
+			.scaleExtent([0.1, 10])
 			.on "zoom", () ->
-				me.groups.stage.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+				me.groups.stage.attr("transform", "scale(" + d3.event.scale + ", 1)")
 				return
 
 		### setup drawing area ###
-		@svg = @d3Element.append('svg')
+		@svg = @d3Element.append('svg').attr('class','timeline').call(@behaviors.zoom)
 		@svg.attr('width', @container.width()).attr('height', @container.height())
 		@groups.stage = @svg.append('g')
 			.attr('id', "stage-#{@container.attr('id')}")
-			.call(@behaviors.zoom)
+			# .call(@behaviors.zoom)
 		@groups.segments = @groups.stage.append('g')
 			.attr('id', "segments-#{@container.attr('id')}")
 			# .attr('transform', "translate(#{@margin.left},#{@margin.top})")
