@@ -2,6 +2,7 @@ class @Timeline
 	container: null
 	d3Element: null
 	svg: null
+	svgStage: null
 	x: null
 	xAxis: null
 	groups:
@@ -20,6 +21,14 @@ class @Timeline
 		right: 10
 		bottom: 10
 		left: 10
+	padding:
+		top: 20
+		right: 20
+		bottom: 20
+		left: 20
+	size:
+		width: 0
+		height: 0
 
 	constructor: (@container, seconds = 0) ->
 		if typeof @container is 'string'
@@ -55,10 +64,17 @@ class @Timeline
 				return
 
 		### setup drawing area ###
-		@svg = @d3Element.append('svg').attr('class','timeline').call(@behaviors.zoom)
-		@svg.attr('width', @container.width()).attr('height', @container.height())
-		@groups.stage = @svg.append('g')
+		@size.width = @container.width() - @padding.right - @padding.left
+		@size.height = @container.height() - @padding.top - @padding.bottom
+		@svgStage = @d3Element.append('svg')
+			.attr('class','timeline-stage')
+			.attr('width', @container.width())
+			.attr('height', @container.height())
+		@groups.stage = @svgStage.append('g')
 			.attr('id', "stage-#{@container.attr('id')}")
+			.attr('transform', "translate(#{@padding.left}, #{@padding.top})")
+		@svg = @groups.stage.append('svg').attr('class','timeline').call(@behaviors.zoom)
+		@svg.attr('width', @size.width).attr('height', @size.height)
 			# .call(@behaviors.zoom)
 		@groups.segments = @groups.stage.append('g')
 			.attr('id', "segments-#{@container.attr('id')}")
@@ -67,7 +83,7 @@ class @Timeline
 		if seconds > 0
 			@setDuration seconds
 
-
+		@draw()()
 
 	addSegment: (x, width) ->
 		id = "rect-#{@container.attr('id')}-#{@segmentsIdx}"
@@ -78,7 +94,7 @@ class @Timeline
 			.attr('x', x)
 			.attr('y', 0)
 			.attr('width', width)
-			.attr('height', @container.height())
+			.attr('height', @size.height)
 			.call(@behaviors.segmentDrag)
 		
 		@segments.push(segment)
@@ -93,15 +109,40 @@ class @Timeline
 		@xAxis = d3.svg.axis()
 			.scale(@x)
 			.orient('bottom')
-			.ticks(d3.time.seconds, 100000)
+			.ticks(10)
 			.tickFormat(d3.time.format('%H:%M:%S.%L'))
 		if @groups.xAxis is null
-			@groups.xAxis =  @groups.stage.append('g')
+			@groups.xAxis =  @svgStage.append('g')
 				.attr('class', 'x axis')
 				.attr('id', 'x-axis-group')
 				.attr('transform', "translate(0, #{(@container.height() - @margin.top - @margin.bottom)})")
 		@groups.xAxis.call(@xAxis)
 		return
+
+	draw: () ->
+		me = @
+		drawFunc = () ->
+			tx = (d) ->
+				return "translate(#{me.x(d)}, 0)"
+			gx = me.svg.selectAll('g.x')
+				.data(me.x.ticks(10), String)
+				.attr('transform', tx)
+			gxe = gx.enter().insert('g', 'a')
+				.attr('class', 'x')
+				.attr('transform', tx)
+			gxe.append('line')
+				.attr('stroke', '#ccc')
+				.attr('y1', 0)
+				.attr('y2', me.size.height)
+			gxe.append('text')
+				.attr('class', 'axis')
+				.attr('y', me.size.height)
+				.attr('dy', '1em')
+				.attr('text-anchor', 'middle')
+				.text(d3.time.format('%H:%M:%S.%L'))
+				.style('cursor', 'ew-resize')
+			gx.exit().remove()
+			# me.update()
 
 	randID: () ->
 		text = "";

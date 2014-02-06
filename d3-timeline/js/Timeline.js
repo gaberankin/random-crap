@@ -6,6 +6,8 @@
 
     Timeline.prototype.svg = null;
 
+    Timeline.prototype.svgStage = null;
+
     Timeline.prototype.x = null;
 
     Timeline.prototype.xAxis = null;
@@ -33,6 +35,18 @@
       right: 10,
       bottom: 10,
       left: 10
+    };
+
+    Timeline.prototype.padding = {
+      top: 20,
+      right: 20,
+      bottom: 20,
+      left: 20
+    };
+
+    Timeline.prototype.size = {
+      width: 0,
+      height: 0
     };
 
     function Timeline(container, seconds) {
@@ -71,31 +85,51 @@
       });
       /* setup drawing area*/
 
-      this.svg = this.d3Element.append('svg').attr('class', 'timeline').call(this.behaviors.zoom);
-      this.svg.attr('width', this.container.width()).attr('height', this.container.height());
-      this.groups.stage = this.svg.append('g').attr('id', "stage-" + (this.container.attr('id')));
+      this.size.width = this.container.width() - this.padding.right - this.padding.left;
+      this.size.height = this.container.height() - this.padding.top - this.padding.bottom;
+      this.svgStage = this.d3Element.append('svg').attr('class', 'timeline-stage').attr('width', this.container.width()).attr('height', this.container.height());
+      this.groups.stage = this.svgStage.append('g').attr('id', "stage-" + (this.container.attr('id'))).attr('transform', "translate(" + this.padding.left + ", " + this.padding.top + ")");
+      this.svg = this.groups.stage.append('svg').attr('class', 'timeline').call(this.behaviors.zoom);
+      this.svg.attr('width', this.size.width).attr('height', this.size.height);
       this.groups.segments = this.groups.stage.append('g').attr('id', "segments-" + (this.container.attr('id')));
       if (seconds > 0) {
         this.setDuration(seconds);
       }
+      this.draw()();
     }
 
     Timeline.prototype.addSegment = function(x, width) {
       var id, segment;
       id = "rect-" + (this.container.attr('id')) + "-" + this.segmentsIdx;
       this.segmentsIdx++;
-      segment = this.groups.segments.append('rect').attr('class', 'time-segment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.container.height()).call(this.behaviors.segmentDrag);
+      segment = this.groups.segments.append('rect').attr('class', 'time-segment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.size.height).call(this.behaviors.segmentDrag);
       this.segments.push(segment);
     };
 
     Timeline.prototype.setDuration = function(seconds) {
       this.duration = seconds;
       this.x = d3.time.scale().domain([new Date('2014-01-01 00:00:00'), d3.time.second.offset(new Date('2014-01-01 00:00:00'), this.duration)]).range([0, this.duration]);
-      this.xAxis = d3.svg.axis().scale(this.x).orient('bottom').ticks(d3.time.seconds, 100000).tickFormat(d3.time.format('%H:%M:%S.%L'));
+      this.xAxis = d3.svg.axis().scale(this.x).orient('bottom').ticks(10).tickFormat(d3.time.format('%H:%M:%S.%L'));
       if (this.groups.xAxis === null) {
-        this.groups.xAxis = this.groups.stage.append('g').attr('class', 'x axis').attr('id', 'x-axis-group').attr('transform', "translate(0, " + (this.container.height() - this.margin.top - this.margin.bottom) + ")");
+        this.groups.xAxis = this.svgStage.append('g').attr('class', 'x axis').attr('id', 'x-axis-group').attr('transform', "translate(0, " + (this.container.height() - this.margin.top - this.margin.bottom) + ")");
       }
       this.groups.xAxis.call(this.xAxis);
+    };
+
+    Timeline.prototype.draw = function() {
+      var drawFunc, me;
+      me = this;
+      return drawFunc = function() {
+        var gx, gxe, tx;
+        tx = function(d) {
+          return "translate(" + (me.x(d)) + ", 0)";
+        };
+        gx = me.svg.selectAll('g.x').data(me.x.ticks(10), String).attr('transform', tx);
+        gxe = gx.enter().insert('g', 'a').attr('class', 'x').attr('transform', tx);
+        gxe.append('line').attr('stroke', '#ccc').attr('y1', 0).attr('y2', me.size.height);
+        gxe.append('text').attr('class', 'axis').attr('y', me.size.height).attr('dy', '1em').attr('text-anchor', 'middle').text(d3.time.format('%H:%M:%S.%L')).style('cursor', 'ew-resize');
+        return gx.exit().remove();
+      };
     };
 
     Timeline.prototype.randID = function() {
