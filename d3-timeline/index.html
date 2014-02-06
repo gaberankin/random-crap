@@ -25,20 +25,13 @@
 	<body>
 		<div id="c" style="width:600px; height:100px;"></div><br />
 		<a href="#" id="init">Init canvas</a><br />
+		<form action="" id="addSegment">
+			<input id="x-input" value="" placeholder="x" />
+			<input id="w-input" value="" placeholder="width" />
+			<button type="submit" id="submit">Add Segment</button>
+		</form>
 		<div id="debug"></div><div id="debug2"></div>
 		<div id="other">
 		</div>
-		<script type="text/javascript">
-		var dataset = [
-			{'name' : 'number 1', 'x' : 10, 'w' : 20},
-			{'name' : 'number 2', 'x' : 40, 'w' : 10},
-			{'name' : 'number 3', 'x' : 70, 'w' : 35},
-			{'name' : 'number 4', 'x' : 120, 'w' : 23}
-		];
-		var d = d3.select('#other').selectAll('div').data(dataset).enter().append('div').text(function(d){
-			console.log(d);
-			return d.name;
-		});
-		</script>
 	</body>
 </html>

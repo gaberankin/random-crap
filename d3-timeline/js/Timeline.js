@@ -16,11 +16,16 @@
       segments: null
     };
 
-    Timeline.prototype.drag = null;
+    Timeline.prototype.behaviors = {
+      segmentDrag: null,
+      timeFormat: null
+    };
 
     Timeline.prototype.duration = 0;
 
     Timeline.prototype.segments = [];
+
+    Timeline.prototype.segmentsIdx = 0;
 
     Timeline.prototype.margin = {
       top: 10,
@@ -30,6 +35,7 @@
     };
 
     function Timeline(container, seconds) {
+      var me;
       this.container = container;
       if (seconds == null) {
         seconds = 0;
@@ -47,19 +53,24 @@
       if (seconds > 0) {
         this.setDuration(seconds);
       }
-      this.drag = d3.behavior.drag().on('dragstart', function() {
-        console.log('drag start', this, arguments);
-      }).on('drag', function() {
-        console.log('drag', this, arguments);
-      }).on('dragend', function() {
-        console.log('drag end', this, arguments);
+      me = this;
+      this.behaviors.timeFormat = d3.time.format('%H:%M:%S.%L');
+      this.behaviors.segmentDrag = d3.behavior.drag().origin(Object).on('drag', function(d, i) {
+        var x;
+        x = parseInt(d3.select(this).attr('x')) + d3.event.dx;
+        if (x < 0) {
+          return;
+        }
+        $('#debug').text("" + x + ", " + (me.behaviors.timeFormat(me.x.invert(x))));
+        d3.select(this).attr('x', x);
       });
     }
 
     Timeline.prototype.addSegment = function(x, width) {
       var id, segment;
-      id = "rect-" + (this.container.attr('id'));
-      segment = this.groups.segments.append('rect').attr('class', 'timesegment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.container.height()).call(this.drag);
+      id = "rect-" + (this.container.attr('id')) + "-" + this.segmentsIdx;
+      this.segmentsIdx++;
+      segment = this.groups.segments.append('rect').attr('class', 'timesegment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.container.height()).call(this.behaviors.segmentDrag);
       this.segments.push(segment);
     };
 

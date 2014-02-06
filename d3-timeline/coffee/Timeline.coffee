@@ -7,9 +7,12 @@ class @Timeline
 	groups: 
 		xAxis: null
 		segments: null
-	drag: null
+	behaviors:
+		segmentDrag: null
+		timeFormat: null
 	duration: 0
 	segments: []
+	segmentsIdx: 0
 	margin:
 		top: 10
 		right: 10
@@ -28,25 +31,27 @@ class @Timeline
 		@svg = @d3Element.append('svg')
 		@svg.attr('width', @container.width()).attr('height', @container.height())
 		@groups.segments = @svg.append('g')
-    		.attr('transform', "translate(#{@margin.left},#{@margin.top})")
-    		.attr('id', "segments-#{@container.attr('id')}")
+			.attr('transform', "translate(#{@margin.left},#{@margin.top})")
+			.attr('id', "segments-#{@container.attr('id')}")
 
 		if seconds > 0
 			@setDuration seconds
 
-		@drag = d3.behavior.drag()
-			.on 'dragstart', ->
-				console.log 'drag start', @, arguments
-				return
-			.on 'drag', ->
-				console.log 'drag', @, arguments
-				return
-			.on 'dragend', ->
-				console.log 'drag end', @, arguments
+		me = @
+		@behaviors.timeFormat = d3.time.format('%H:%M:%S.%L')
+		@behaviors.segmentDrag = d3.behavior.drag()
+			.origin(Object)
+			.on 'drag', (d, i)->
+				x = parseInt(d3.select(this).attr('x')) + d3.event.dx
+				if x < 0
+					return
+				$('#debug').text("#{x}, #{me.behaviors.timeFormat(me.x.invert(x))}")
+				d3.select(this).attr('x', x)
 				return
 
 	addSegment: (x, width) ->
-		id = "rect-#{@container.attr('id')}"
+		id = "rect-#{@container.attr('id')}-#{@segmentsIdx}"
+		@segmentsIdx++
 		segment = @groups.segments.append('rect')
 			.attr('class', 'timesegment')
 			.attr('id', id)
@@ -54,7 +59,7 @@ class @Timeline
 			.attr('y', 0)
 			.attr('width', width)
 			.attr('height', @container.height())
-			.call(@drag)
+			.call(@behaviors.segmentDrag)
 		
 		@segments.push(segment)
 		return

@@ -23,10 +23,21 @@
   };
 
   $(document).ready(function() {
-    return $('#init').click(function(e) {
+    $('#init').click(function(e) {
       initEditor($('#c'), 3600);
       e.preventDefault();
       return true;
+    });
+    return $('#addSegment').submit(function(e) {
+      var w, x;
+      e.preventDefault();
+      x = $('#x-input').val();
+      w = $('#w-input').val();
+      if (x === '' || w === '') {
+        alert('please enter an x and width value');
+        return;
+      }
+      return me.time.addSegment(x, w);
     });
   });
 
