@@ -12,13 +12,15 @@
     Timeline.prototype.xAxis = null;
 
     Timeline.prototype.groups = {
+      stage: null,
       xAxis: null,
       segments: null
     };
 
     Timeline.prototype.behaviors = {
       segmentDrag: null,
-      timeFormat: null
+      timeFormat: null,
+      zoom: null
     };
 
     Timeline.prototype.duration = 0;
@@ -47,13 +49,9 @@
         this.container.attr('id', 't-' + this.randID());
       }
       this.d3Element = d3.select('#' + this.container.attr('id'));
-      this.svg = this.d3Element.append('svg');
-      this.svg.attr('width', this.container.width()).attr('height', this.container.height());
-      this.groups.segments = this.svg.append('g').attr('transform', "translate(" + this.margin.left + "," + this.margin.top + ")").attr('id', "segments-" + (this.container.attr('id')));
-      if (seconds > 0) {
-        this.setDuration(seconds);
-      }
       me = this;
+      /* setup behaviors*/
+
       this.behaviors.timeFormat = d3.time.format('%H:%M:%S.%L');
       this.behaviors.segmentDrag = d3.behavior.drag().origin(Object).on('drag', function(d, i) {
         var x;
@@ -68,6 +66,18 @@
       }).on('dragend', function() {
         d3.select(this).classed('segment-dragging', false);
       });
+      this.behaviors.zoom = d3.behavior.zoom().scaleExtent([1, 10]).on("zoom", function() {
+        me.groups.stage.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      });
+      /* setup drawing area*/
+
+      this.svg = this.d3Element.append('svg');
+      this.svg.attr('width', this.container.width()).attr('height', this.container.height());
+      this.groups.stage = this.svg.append('g').attr('id', "stage-" + (this.container.attr('id'))).call(this.behaviors.zoom);
+      this.groups.segments = this.groups.stage.append('g').attr('id', "segments-" + (this.container.attr('id')));
+      if (seconds > 0) {
+        this.setDuration(seconds);
+      }
     }
 
     Timeline.prototype.addSegment = function(x, width) {
@@ -83,7 +93,7 @@
       this.x = d3.time.scale().domain([new Date('2014-01-01 00:00:00'), d3.time.second.offset(new Date('2014-01-01 00:00:00'), this.duration)]).range([0, this.duration]);
       this.xAxis = d3.svg.axis().scale(this.x).orient('bottom').ticks(d3.time.seconds, 100000).tickFormat(d3.time.format('%H:%M:%S.%L'));
       if (this.groups.xAxis === null) {
-        this.groups.xAxis = this.svg.append('g').attr('class', 'x axis').attr('id', 'x-axis-group').attr('transform', "translate(0, " + (this.container.height() - this.margin.top - this.margin.bottom) + ")");
+        this.groups.xAxis = this.groups.stage.append('g').attr('class', 'x axis').attr('id', 'x-axis-group').attr('transform', "translate(0, " + (this.container.height() - this.margin.top - this.margin.bottom) + ")");
       }
       this.groups.xAxis.call(this.xAxis);
     };

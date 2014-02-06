@@ -4,12 +4,14 @@ class @Timeline
 	svg: null
 	x: null
 	xAxis: null
-	groups: 
+	groups:
+		stage: null
 		xAxis: null
 		segments: null
 	behaviors:
 		segmentDrag: null
 		timeFormat: null
+		zoom: null
 	duration: 0
 	segments: []
 	segmentsIdx: 0
@@ -27,17 +29,8 @@ class @Timeline
 			@container.attr('id', 't-' + @randID())
 		@d3Element = d3.select('#' + @container.attr('id'))
 
-
-		@svg = @d3Element.append('svg')
-		@svg.attr('width', @container.width()).attr('height', @container.height())
-		@groups.segments = @svg.append('g')
-			.attr('transform', "translate(#{@margin.left},#{@margin.top})")
-			.attr('id', "segments-#{@container.attr('id')}")
-
-		if seconds > 0
-			@setDuration seconds
-
 		me = @
+		### setup behaviors ###
 		@behaviors.timeFormat = d3.time.format('%H:%M:%S.%L')
 		@behaviors.segmentDrag = d3.behavior.drag()
 			.origin(Object)
@@ -54,6 +47,27 @@ class @Timeline
 			.on 'dragend', () ->
 				d3.select(this).classed('segment-dragging', false)
 				return
+		@behaviors.zoom = d3.behavior.zoom()
+			.scaleExtent([1, 10])
+			.on "zoom", () ->
+				me.groups.stage.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")")
+				return
+
+		### setup drawing area ###
+		@svg = @d3Element.append('svg')
+		@svg.attr('width', @container.width()).attr('height', @container.height())
+		@groups.stage = @svg.append('g')
+			.attr('id', "stage-#{@container.attr('id')}")
+			.call(@behaviors.zoom)
+		@groups.segments = @groups.stage.append('g')
+			.attr('id', "segments-#{@container.attr('id')}")
+			# .attr('transform', "translate(#{@margin.left},#{@margin.top})")
+
+		if seconds > 0
+			@setDuration seconds
+
+
+
 	addSegment: (x, width) ->
 		id = "rect-#{@container.attr('id')}-#{@segmentsIdx}"
 		@segmentsIdx++
@@ -81,7 +95,7 @@ class @Timeline
 			.ticks(d3.time.seconds, 100000)
 			.tickFormat(d3.time.format('%H:%M:%S.%L'))
 		if @groups.xAxis is null
-			@groups.xAxis =  @svg.append('g')
+			@groups.xAxis =  @groups.stage.append('g')
 				.attr('class', 'x axis')
 				.attr('id', 'x-axis-group')
 				.attr('transform', "translate(0, #{(@container.height() - @margin.top - @margin.bottom)})")
