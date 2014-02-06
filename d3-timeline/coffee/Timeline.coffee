@@ -48,12 +48,17 @@ class @Timeline
 				$('#debug').text("#{x}, #{me.behaviors.timeFormat(me.x.invert(x))}")
 				d3.select(this).attr('x', x)
 				return
-
+			.on 'dragstart', () ->
+				d3.select(this).classed('segment-dragging', true)
+				return
+			.on 'dragend', () ->
+				d3.select(this).classed('segment-dragging', false)
+				return
 	addSegment: (x, width) ->
 		id = "rect-#{@container.attr('id')}-#{@segmentsIdx}"
 		@segmentsIdx++
 		segment = @groups.segments.append('rect')
-			.attr('class', 'timesegment')
+			.attr('class', 'time-segment')
 			.attr('id', id)
 			.attr('x', x)
 			.attr('y', 0)

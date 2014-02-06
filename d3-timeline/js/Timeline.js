@@ -63,6 +63,10 @@
         }
         $('#debug').text("" + x + ", " + (me.behaviors.timeFormat(me.x.invert(x))));
         d3.select(this).attr('x', x);
+      }).on('dragstart', function() {
+        d3.select(this).classed('segment-dragging', true);
+      }).on('dragend', function() {
+        d3.select(this).classed('segment-dragging', false);
       });
     }
 
@@ -70,7 +74,7 @@
       var id, segment;
       id = "rect-" + (this.container.attr('id')) + "-" + this.segmentsIdx;
       this.segmentsIdx++;
-      segment = this.groups.segments.append('rect').attr('class', 'timesegment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.container.height()).call(this.behaviors.segmentDrag);
+      segment = this.groups.segments.append('rect').attr('class', 'time-segment').attr('id', id).attr('x', x).attr('y', 0).attr('width', width).attr('height', this.container.height()).call(this.behaviors.segmentDrag);
       this.segments.push(segment);
     };
 
