@@ -42,6 +42,7 @@ class @Timeline
 				d3.select(this).attr('x', x)
 				return
 			.on 'dragstart', () ->
+				d3.event.sourceEvent.stopPropagation();
 				d3.select(this).classed('segment-dragging', true)
 				return
 			.on 'dragend', () ->

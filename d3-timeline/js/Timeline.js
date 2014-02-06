@@ -62,6 +62,7 @@
         $('#debug').text("" + x + ", " + (me.behaviors.timeFormat(me.x.invert(x))));
         d3.select(this).attr('x', x);
       }).on('dragstart', function() {
+        d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed('segment-dragging', true);
       }).on('dragend', function() {
         d3.select(this).classed('segment-dragging', false);
