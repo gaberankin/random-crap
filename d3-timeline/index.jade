@@ -1,0 +1,19 @@
+doctype html
+html
+	head
+		script(type="text/javascript", src="http://code.jquery.com/jquery-1.10.2.min.js")
+		script(type="text/javascript", src="http://d3js.org/d3.v3.min.js", charset="utf-8")
+		script(type="text/javascript", src="js/Timeline.js")
+		script(type="text/javascript", src="js/app.js")
+		link(type="text/css", rel="stylesheet", href="css/timeline.css")
+
+	body
+		#c(style="width:600px; height:100px;")
+		a#init(href="#") Init Canvas
+		form#addSegment(action="")
+			input#x-input(value="",placeholder="x")
+			input#w-input(value="",placeholder="width")
+			button#submit(type="submit") Add Segment
+		#debug
+		#debug2
+		#other

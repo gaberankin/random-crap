@@ -1,19 +1,21 @@
-svg.timeline {
+svg.timeline-stage {
   font-family: Arial, sans-serif;
   font-size: 10px; }
-  svg.timeline .axis path, svg.timeline .axis line {
+  svg.timeline-stage .axis path, svg.timeline-stage .axis line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges; }
-  svg.timeline .bar {
+  svg.timeline-stage .bar {
     fill: steelblue; }
-  svg.timeline .tick {
+  svg.timeline-stage .tick {
     font-family: Arial, sans-serif;
     font-size: 10px; }
-  svg.timeline .time-segment {
+  svg.timeline-stage .time-segment rect {
     fill: rgba(239, 233, 43, 0.7);
     cursor: col-resize; }
-  svg.timeline .segment-dragging {
+  svg.timeline-stage .time-segment text {
+    fill: black; }
+  svg.timeline-stage .segment-dragging rect {
     fill: rgba(20, 255, 145, 0.9);
     stroke: #14ff91;
     stroke-width: 1; }
