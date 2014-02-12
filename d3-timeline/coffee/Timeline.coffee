@@ -1,3 +1,7 @@
+DEBUG = @
+
+DEBUG.segment = null;
+
 class @Timeline
 	container: null
 	d3Element: null
@@ -50,7 +54,8 @@ class @Timeline
 				if x < 0
 					return
 				d.x = x
-				el.datum(d)
+				d.segment.updateData(d.x, d.width)
+				#el.datum(d)
 				# el.select('.time-segment-position-text').text("#{me.behaviors.timeFormat(me.x.invert(x))}")
 				# el.attr('transform', 'translate(' + x + ',0)')
 				return
@@ -93,36 +98,7 @@ class @Timeline
 		id = "segment-#{@container.attr('id')}-#{@segmentsIdx}"
 		@segmentsIdx++
 		me = @
-		segment = @groups.segments
-			.data([{'x' : parseInt(x), 'width' : parseInt(width)}])
-			.append('g')
-			.attr('class', 'time-segment')
-			.attr('id', id)
-			.attr('transform', (d) ->
-				'translate(' + d.x + ',0)'
-			)
-			.attr('width', (d) ->
-				d.width
-			)
-			.attr('height', @size.height)
-			.call(@behaviors.segmentDrag)
-		rect = segment.append('rect')
-			.attr('class', 'time-segment-rect')
-			.attr('id', id + '-rect')
-			.attr('width', (d) ->
-				d.width
-			)
-			.attr('height', @size.height)
-		pos_text = segment.append('text')
-			.attr('class', 'time-segment-position-text')
-			.text((d) ->
-				"#{me.behaviors.timeFormat(me.x.invert(d.x))}"
-			)
-		width_text = segment.append('text')
-			.attr('class', 'time-segment-width-text')
-			.text((d) ->
-				"#{me.behaviors.timeFormat(me.x.invert(d.width))}"
-			)
+		segment = new TimelineSegment(me, id, x, width)
 		@segments.push(segment)
 		return
 
@@ -185,42 +161,53 @@ class TimelineSegment
 	rect: null
 	pos_text: null
 	width_text: null
-	constructor: (timeline, id, x, width, drag) ->
+	constructor: (@timeline, id, x, width) ->
 		me = @
-		@g = timeline.groups.segments
-			.data([{'x' : parseInt(x), 'width' : parseInt(width)}])
+		@g = @timeline.groups.segments
+			.data([{'x' : parseInt(x), 'width' : parseInt(width), 'segment': @}])
 			.append('g')
 			.attr('class', 'time-segment')
 			.attr('id', id)
-			.attr('transform', @segmentX)
-			.attr('width', @segmentW)
-			.attr('height', timeline.size.height)
-			.call(drag)
+			.attr('transform', TimelineSegment.segmentX)
+			.attr('width', TimelineSegment.segmentW)
+			.attr('height', @timeline.size.height)
+			.call(@timeline.behaviors.segmentDrag)
 		@rect = @g.append('rect')
 			.attr('class', 'time-segment-rect')
 			.attr('id', id + '-rect')
-			.attr('width', @segmentW)
-			.attr('height', @size.height)
+			.attr('width', TimelineSegment.segmentW)
+			.attr('height', @timeline.size.height)
 		@pos_text = @g.append('text')
 			.attr('class', 'time-segment-position-text')
-			.text(@segmentXText)
+			.text(TimelineSegment.segmentXText)
 		@width_text = @g.append('text')
 			.attr('class', 'time-segment-width-text')
-			.text(@segmentWText)
+			.text(TimelineSegment.segmentWText)
+		@width_text.attr('transform', TimelineSegment.segmentWTextPos)
+
 	updateData: (x, width) ->
 		me = @
-		@g.datum({'x' : parseInt(x), 'width' : parseInt(width)})
-			.attr('transform', @segmentX)
-			.attr('width', @segmentW)
-		@rect.attr('width', @segmentW)
-		@pos_text.text(@segmentXText)
-		@width_text.text(@segmentWText)
-	segmentX: (d) ->
+		@g.datum({'x' : parseInt(x), 'width' : parseInt(width), 'segment': @})
+			.attr('transform', TimelineSegment.segmentX)
+			.attr('width', TimelineSegment.segmentW)
+		@rect.datum({'x' : parseInt(x), 'width' : parseInt(width), 'segment': @})
+			.attr('width', TimelineSegment.segmentW)
+		@pos_text.datum({'x' : parseInt(x), 'width' : parseInt(width), 'segment': @})
+			.text(TimelineSegment.segmentXText)
+		@width_text.datum({'x' : parseInt(x), 'width' : parseInt(width), 'segment': @})
+			.text(TimelineSegment.segmentWText)
+			.attr('transform', TimelineSegment.segmentWTextPos)
+	@segmentX: (d) ->
 		return 'translate(' + d.x + ',0)'
-	segmentXText: (d) ->
-		return "#{me.timeline.behaviors.timeFormat(me.timeline.x.invert(d.x))}"
-	segmentW: (d) ->
+	@segmentXText: (d) ->
+		return "#{d.segment.timeline.behaviors.timeFormat(d.segment.timeline.x.invert(d.segment.g.datum().x))}"
+	@segmentW: (d) ->
 		return d.width
-	segmentWText: (d) ->
-		return "#{me.timeline.behaviors.timeFormat(me.timeline.x.invert(d.width))}"
+	@segmentWTextPos: (d) ->
+		me = $(@)
+		heightOffset = d.segment.timeline.size.height - me.height()
+		widthOffset = d.width - me.width()
+		return "translate(#{widthOffset}, #{heightOffset})"
+	@segmentWText: (d) ->
+		return "#{d.segment.timeline.behaviors.timeFormat(d.segment.timeline.x.invert(d.segment.g.datum().width))}"
 
