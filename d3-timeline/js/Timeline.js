@@ -81,7 +81,9 @@
           return;
         }
         d.x = x;
-        d.segment.updateData(d.x, d.width);
+        d.segment.updateData({
+          'x': d.x
+        });
       }).on('dragstart', function() {
         d3.event.sourceEvent.stopPropagation();
         d3.select(this).classed('segment-dragging', true);
@@ -162,14 +164,44 @@
 
     TimelineSegment.prototype.rect = null;
 
+    TimelineSegment.prototype.handle = null;
+
+    TimelineSegment.prototype.handleWidth = 10;
+
+    TimelineSegment.prototype.handleHeight = 10;
+
     TimelineSegment.prototype.pos_text = null;
 
     TimelineSegment.prototype.width_text = null;
+
+    TimelineSegment.prototype.selection = null;
+
+    TimelineSegment.prototype.behaviors = {
+      handleDrag: null
+    };
 
     function TimelineSegment(timeline, id, x, width) {
       var me;
       this.timeline = timeline;
       me = this;
+      this.behaviors.handleDrag = d3.behavior.drag().origin(Object).on('drag', function(d, i) {
+        var el, transW, w;
+        el = d3.select(this);
+        transW = d.width;
+        w = transW + d3.event.dx;
+        if (w < 0) {
+          return;
+        }
+        d.width = w;
+        d.segment.updateData({
+          'width': d.width
+        });
+      }).on('dragstart', function(d) {
+        d3.event.sourceEvent.stopPropagation();
+        d.segment.g.classed('segment-resizing', true);
+      }).on('dragend', function(d) {
+        d.segment.g.classed('segment-resizing', false);
+      });
       this.g = this.timeline.groups.segments.data([
         {
           'x': parseInt(x),
@@ -178,34 +210,29 @@
         }
       ]).append('g').attr('class', 'time-segment').attr('id', id).attr('transform', TimelineSegment.segmentX).attr('width', TimelineSegment.segmentW).attr('height', this.timeline.size.height).call(this.timeline.behaviors.segmentDrag);
       this.rect = this.g.append('rect').attr('class', 'time-segment-rect').attr('id', id + '-rect').attr('width', TimelineSegment.segmentW).attr('height', this.timeline.size.height);
+      this.handle = this.g.append('rect').attr('class', 'time-segment-width-handle').attr('transform', TimelineSegment.segmentHandleX).attr('width', this.handleWidth).attr('height', this.handleHeight).call(this.behaviors.handleDrag);
       this.pos_text = this.g.append('text').attr('class', 'time-segment-position-text').text(TimelineSegment.segmentXText);
       this.width_text = this.g.append('text').attr('class', 'time-segment-width-text').text(TimelineSegment.segmentWText);
       this.width_text.attr('transform', TimelineSegment.segmentWTextPos);
+      this.selection = this.timeline.groups.segments.selectAll("#" + id + ", #" + id + " rect, #" + id + " text");
     }
 
-    TimelineSegment.prototype.updateData = function(x, width) {
-      var me;
+    TimelineSegment.prototype.updateData = function(d) {
+      var cd, me;
       me = this;
-      this.g.datum({
-        'x': parseInt(x),
-        'width': parseInt(width),
-        'segment': this
-      }).attr('transform', TimelineSegment.segmentX).attr('width', TimelineSegment.segmentW);
-      this.rect.datum({
-        'x': parseInt(x),
-        'width': parseInt(width),
-        'segment': this
-      }).attr('width', TimelineSegment.segmentW);
-      this.pos_text.datum({
-        'x': parseInt(x),
-        'width': parseInt(width),
-        'segment': this
-      }).text(TimelineSegment.segmentXText);
-      return this.width_text.datum({
-        'x': parseInt(x),
-        'width': parseInt(width),
-        'segment': this
-      }).text(TimelineSegment.segmentWText).attr('transform', TimelineSegment.segmentWTextPos);
+      cd = this.g.datum();
+      if (d.x != null) {
+        cd.x = parseInt(d.x);
+      }
+      if (d.width != null) {
+        cd.width = parseInt(d.width);
+      }
+      this.selection.datum(cd);
+      this.g.attr('transform', TimelineSegment.segmentX).attr('width', TimelineSegment.segmentW);
+      this.rect.attr('width', TimelineSegment.segmentW);
+      this.handle.attr('transform', TimelineSegment.segmentHandleX);
+      this.pos_text.text(TimelineSegment.segmentXText);
+      return this.width_text.text(TimelineSegment.segmentWText).attr('transform', TimelineSegment.segmentWTextPos);
     };
 
     TimelineSegment.segmentX = function(d) {
@@ -214,6 +241,10 @@
 
     TimelineSegment.segmentXText = function(d) {
       return "" + (d.segment.timeline.behaviors.timeFormat(d.segment.timeline.x.invert(d.segment.g.datum().x)));
+    };
+
+    TimelineSegment.segmentHandleX = function(d) {
+      return "translate(" + (d.width - d.segment.handleWidth) + ", 0)";
     };
 
     TimelineSegment.segmentW = function(d) {
