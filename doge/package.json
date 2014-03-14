@@ -1,0 +1,19 @@
+{
+  "name": "jquery.doge",
+  "version": "0.1.0",
+  "description": "a stupid thing that I made that is kind of like raptorize, except with the doge meme in random directions",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabe Rankin",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "jade": "~1.1.x",
+    "coffee-script": "1.6.x"
+  }
+}
