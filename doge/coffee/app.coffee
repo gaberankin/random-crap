@@ -1,5 +1,5 @@
 $(document).ready ->
-	$("#test").doge(
+	$("#test, #test2").doge(
 		enterOn: 'click'
 		imagePath: 'js'
 	)

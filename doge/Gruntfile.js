@@ -29,13 +29,33 @@ module.exports = function(grunt) {
 				src: 'js/<%= pkg.name %>.js',
 				dest: 'js/<%= pkg.name %>.min.js'
 			}
-		}
+		},
+		watch: {
+			coffee: {
+				files: 'coffee/*.coffee',
+				tasks: ['coffee','uglify'],
+				options: {
+					interrupt: true,
+				},
+			},
+			jade: {
+				files: 'index.jade',
+				tasks: ['jade'],
+				options: {
+					interrupt: true,
+				},
+			},
+		},
+	});
+	grunt.event.on('watch', function(action, filepath, target) {
+		grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
 	});
 
 	// Load the plugin that provides the "uglify" task.
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-coffee');
 	grunt.loadNpmTasks('grunt-contrib-jade');
+	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Default task(s).
 	grunt.registerTask('default', ['coffee','jade','uglify']);
