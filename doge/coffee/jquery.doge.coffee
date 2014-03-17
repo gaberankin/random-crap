@@ -1,6 +1,6 @@
 
 (($) ->
-	dogeHeadRight = (doge)->
+	dogeHeadRight = (doge, el, callback)->
 		head = @
 		doge.css
 			right: "0"
@@ -9,7 +9,7 @@
 		shakeHorzMoveUp doge,
 			vdist: head.h
 			hdist: 5
-			time: 3000
+			time: 2000
 			callback: () ->
 				doge.animate
 					bottom: "0"
@@ -25,14 +25,44 @@
 							top: "auto"
 						)
 						doge.attr('data-locked','0')
+						callback.apply(el)
 						return
 					return
 				return
 		return
 
-	dogeHeadRightDown = dogeHeadRight
+	# dogeHeadRightDown = dogeHeadRight
+	dogeHeadRightDown = (doge, el, callback) ->
+		head = @
+		doge.css
+			bottom: "0"
+			left: "auto"
+		shakeVertMoveOut doge,
+			hdist: head.w
+			vdist: 5
+			time: 2000
+			callback: () ->
+				doge.animate
+					left: "0"
+				, ->
+					offset = (($(this).position().top) + head.h)
+					$(this).delay(300).animate
+						bottom: offset
+					, 2200, ->
+						doge.css(
+							left: "-#{head.h}px"
+							right: "auto"
+							bottom: "0"
+							top: "auto"
+						)
+						doge.attr('data-locked','0')
+						callback.apply(el)
+						return
+					return
+				return
+
 	dogeHeadRightUp = dogeHeadRight
-	dogeHeadLeft = (doge) ->
+	dogeHeadLeft = (doge, el, callback) ->
 		head = @
 		doge.css
 			right: "auto"
@@ -41,7 +71,7 @@
 		shakeHorzMoveUp doge,
 			vdist: head.h
 			hdist: 5
-			time: 3000
+			time: 2000
 			attr: 'left'
 			callback: () ->
 				doge.animate
@@ -58,6 +88,7 @@
 							top: "auto"
 						)
 						doge.attr('data-locked','0')
+						callback.apply(el)
 						return
 					return
 				return
@@ -105,6 +136,8 @@
 			enterOn: "click" #timer, click
 			delayTime: 5000 #time before doge sneaks in on timer mode
 			imagePath: ''
+			complete: $.noop
+			begin: $.noop
 
 		dogeImageMarkup = '<img id="the-doge" style="display: none" src="#" />'
 		doge = $(dogeImageMarkup).appendTo("body")
@@ -119,9 +152,9 @@
 			init = ->
 				if doge.attr('data-locked') == '1'
 					return
+				options.begin.apply(_this, [])
 				hIndex = Math.floor(Math.random() * heads.length)
 				head = heads[hIndex]
-				console.log head
 
 				doge
 					.attr('data-locked','1')
@@ -134,7 +167,7 @@
 					)
 				# Movement Hilarity	
 				try
-					head.fn.apply(head, [doge])
+					head.fn.apply(head, [doge, _this, options.complete])
 				catch e
 					doge.attr('data-locked','0')
 					console.error(e)
@@ -182,5 +215,37 @@
 			return
 		f()
 		return
+
+	shakeVertMoveOut = (el, args = {}) ->
+		args = $.extend({'vdist': 10, 'hdist': 100, 'freq': 100, 'time': 4000, 'callback': $.noop, 'attr': 'bottom'}, args)
+		if args.freq <= 0
+			el.animate
+				left: args.hdist
+			, args.time
+			, callback
+		curHdist = 0
+		curTime = 0
+		tickLen = args.time / args.freq
+		hPerTick = parseInt(args.hdist) / args.freq
+		x = 0
+		f = () ->
+			animationArgs =
+				left: "+=#{hPerTick}px"
+			if args.attr == 'bottom'
+				animationArgs.bottom = if x == 0 then ((if x % 2 == 0 then "+=" else "-=") + "#{args.vdist}px" ) else ((if x % 2 == 0 then "+=" else "-=") + "#{args.vdist * 2}px")
+			else
+				animationArgs.top = if x == 0 then ((if x % 2 == 0 then "+=" else "-=") + "#{args.vdist}px" ) else ((if x % 2 == 0 then "+=" else "-=") + "#{args.vdist * 2}px")
+			el.animate animationArgs, tickLen, () ->
+				x++
+				curTime += tickLen
+				if x > args.freq
+					args.callback()
+				else
+					f()
+				return
+			return
+		f()
+		return
+
 	return
 ) jQuery
