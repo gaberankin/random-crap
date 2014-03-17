@@ -1,0 +1,9 @@
+<!DOCTYPE html><html lang="en"><head><script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="js/jquery.wiggle.js"></script><script type="text/javascript">	$(document).ready(function(){
+		$("#test").click(function(){
+			$("#wiggler").animate({'top': '+=100px'}, {'duration':'slow','queue': false});
+			$("#wiggler").wiggle({ axis: 'x' });
+		})
+		$("#test2").click(function(){
+			$("#wiggler").animate({'left': '+=100px'}, 'slow').wiggle({ axis: 'y' });
+		})
+	});</script></head><body><button id="test" type="button">Test the wiggle (x)!</button><button id="test2" type="button">Test the wiggle (y)!</button><div id="wiggler" style="position: absolute; left:0; top: 100; border: 1px solid #000; width:50px; height:50px;"></div></body></html>

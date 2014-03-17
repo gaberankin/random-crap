@@ -10,14 +10,16 @@ module.exports = function(grunt) {
 				},
 				files: {
 					'js/app.js' : 'coffee/app.coffee',
-					'js/<%= pkg.name %>.js': 'coffee/<%= pkg.name %>.coffee'
+					'js/<%= pkg.name %>.js': 'coffee/<%= pkg.name %>.coffee',
+					'js/jquery.wiggle.js': 'coffee/jquery.wiggle.coffee'
 				}
 			}
 		},
 		jade: {
 			compile: {
 				files :{
-					 "index.html": "index.jade"
+					 "index.html": "index.jade",
+					 "wiggle.html": "wiggle.jade"
 				}
 			}
 		},
@@ -26,7 +28,7 @@ module.exports = function(grunt) {
 				banner: '/*! <%= pkg.name %> <%= pkg.version %> -  <%= pkg.author %> - <%= grunt.template.today("yyyy-mm-dd") %> */\n'
 			},
 			build: {
-				src: 'js/<%= pkg.name %>.js',
+				src: ['js/jquery.wiggle.js','js/<%= pkg.name %>.js'],
 				dest: 'js/<%= pkg.name %>.min.js'
 			}
 		},
@@ -39,7 +41,7 @@ module.exports = function(grunt) {
 				},
 			},
 			jade: {
-				files: 'index.jade',
+				files: './*.jade',
 				tasks: ['jade'],
 				options: {
 					interrupt: true,
