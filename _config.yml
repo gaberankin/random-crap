@@ -1,0 +1,2 @@
+exclude: ['doge', 'flask-test']
+timezone: 'America/New_York'
