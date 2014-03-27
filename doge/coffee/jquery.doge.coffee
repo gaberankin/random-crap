@@ -104,30 +104,30 @@
 			w: 250
 			h: 265
 		,
-			fn: dogeHeadRightDown
-			src: 'doge-head-right-down'
-			w: 265
-			h: 250
-		,
-			fn: dogeHeadRightUp
-			src: 'doge-head-right-up'
-			w:265
-			h:250
-		,
+		# 	fn: dogeHeadRightDown
+		# 	src: 'doge-head-right-down'
+		# 	w: 265
+		# 	h: 250
+		# ,
+		# 	fn: dogeHeadRightUp
+		# 	src: 'doge-head-right-up'
+		# 	w:265
+		# 	h:250
+		# ,
 			fn: dogeHeadLeft
 			src: 'doge-head-left'
 			w: 250
 			h: 265
-		,
-			fn: dogeHeadLeftDown
-			src: 'doge-head-left-down'
-			w: 265
-			h: 250
-		,
-			fn: dogeHeadLeftUp
-			src: 'doge-head-left-up'
-			w: 265
-			h: 250
+		# ,
+		# 	fn: dogeHeadLeftDown
+		# 	src: 'doge-head-left-down'
+		# 	w: 265
+		# 	h: 250
+		# ,
+		# 	fn: dogeHeadLeftUp
+		# 	src: 'doge-head-left-up'
+		# 	w: 265
+		# 	h: 250
 	]
 
 	$.fn.doge = (options) ->
