@@ -1,0 +1,13 @@
+---
+layout: default
+---
+{{ content }}
+{% for item in site.data.crap %}
+	<div class="crap-item">
+		<div class="crap-image"><img src="{{ item.image }}" alt="{{ item.alttext }}" /></div>
+		<div class="crap-description">
+			<h2>{{ item.title }}</h2>
+			<p>{{ item.description }} <a href="{{ item.url }}">{{ item.linktext }}</a></p>
+		</div>
+	</div>
+{% endfor %}
