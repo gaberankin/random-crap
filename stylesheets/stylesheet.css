@@ -245,3 +245,21 @@ a {
 .cf {
   zoom:1;
 }
+
+.crap-item {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  font-size: 14px;
+  color: #b5e853;
+}
+.crap-image {
+  width: 75px;
+  display: inline-block;
+  float: left;
+}
+
+.crap-image + .crap-description {
+  float: left;
+  margin-left: 5px;
+}
