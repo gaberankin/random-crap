@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <title>Random Crap by gaberankin</title>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="javascripts/doge/jquery.doge.min.js"></script><script type="text/javascript" src="javascripts/doge/main.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="javascripts/jquery.doge.min.js"></script><script type="text/javascript" src="javascripts/doge_demo.js"></script>
   </head>
 
   <body>
@@ -27,10 +27,10 @@
 
     <div class="container">
       <section id="main_content">
-<h2>Much Stupid. Wow</h2>
+       <h2>Much Stupid. Wow</h2>
 <div class="cf btn" id="doge1">
-  <img src="images/doge.png" title="Such Uselessness" class="icon">
-  <h3>Click here for doge</h3>
+	<img src="images/doge.png" title="Such Uselessness" class="icon">
+	<h3>Click here for doge</h3>
 </div>
 
 <p>So, one day I found something called <a href="http://zurb.com/playground/jquery-raptorize" target="_blank">raptorize</a>.</p>
@@ -54,7 +54,7 @@
 
 <pre><code>$(document).ready(function(){
   $('#doge1').doge({
-    imagePath: 'javascripts/doge',
+    imagePath: 'javascripts',
     begin: function(){
       $('#doge1 h3').data('original-text', $('#doge1 h3').text()).text('much comedy');
     },
@@ -69,7 +69,6 @@
 <p>The <code>begin</code> and <code>complete</code> options are callbacks that occur at the start and end of the doge animations.  What I'm doing here is changing the text of the button while the event occurs, and reverting it after it's complete.</p>
 
 <p>There are two more options that I'm not using here in the demo: <code>enterOn</code> (either 'click' or 'timer'.  'click' is the default) and <code>delayTime</code> (represented in milliseconds, is the length of time that the timer should run before the doge animation begins after the plugin code is run).  These two options can be used for surprises.</p>
-
       </section>
     </div>
 

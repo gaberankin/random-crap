@@ -2,8 +2,8 @@
 layout: default
 extra_scripts:
  - //code.jquery.com/jquery-1.11.0.min.js
- - javascripts/doge/jquery.doge.min.js
- - javascripts/doge/main.js
+ - javascripts/jquery.doge.min.js
+ - javascripts/doge_demo.js
 ---
 <h2>Much Stupid. Wow</h2>
 <div class="cf btn" id="doge1">
@@ -32,7 +32,7 @@ extra_scripts:
 
 <pre><code>$(document).ready(function(){
   $('#doge1').doge({
-    imagePath: 'javascripts/doge',
+    imagePath: 'javascripts',
     begin: function(){
       $('#doge1 h3').data('original-text', $('#doge1 h3').text()).text('much comedy');
     },
