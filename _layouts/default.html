@@ -7,8 +7,8 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
     <title>Random Crap by gaberankin</title>
+    {% for script_url in page.extra_scripts %}<script type="text/javascript" src="{{ script_url }}"></script>{% endfor %}
   </head>
 
   <body>
