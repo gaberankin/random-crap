@@ -222,6 +222,17 @@ hr {
   background: url("../images/blacktocat.png") 0 0 no-repeat;
 }
 
+div.btn {
+  display: block;
+  border-radius: 10px;
+  cursor: pointer;
+}
+div.btn img.icon {
+  display: block;
+  width: auto;
+  height: auto;
+}
+
 /* Links
    a, a:hover, a:visited
 */

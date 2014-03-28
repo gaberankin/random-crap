@@ -1,36 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <title>Random Crap by gaberankin</title>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script><script type="text/javascript" src="javascripts/doge/jquery.doge.min.js"></script><script type="text/javascript" src="javascripts/doge/main.js"></script>
-  </head>
-
-  <body>
-
-    <header>
-      <div class="container">
-        <h1>Random Crap</h1>
-        <h2>Where my stupid ideas go to die</h2>
-
-        <section id="downloads">
-          <a href="https://github.com/gaberankin/random-crap/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/gaberankin/random-crap/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/gaberankin/random-crap" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
-
-    <div class="container">
-      <section id="main_content">
+---
+layout: default
+extra_scripts:
+ - //code.jquery.com/jquery-1.11.0.min.js
+ - javascripts/doge/jquery.doge.min.js
+ - javascripts/doge/main.js
+---
 <h2>Much Stupid. Wow</h2>
 <div class="cf btn" id="doge1">
-  <img src="images/doge.png" title="Such Uselessness" class="icon">
-  <h3>Click here for doge</h3>
+	<img src="images/doge.png" title="Such Uselessness" class="icon">
+	<h3>Click here for doge</h3>
 </div>
 
 <p>So, one day I found something called <a href="http://zurb.com/playground/jquery-raptorize" target="_blank">raptorize</a>.</p>
@@ -69,10 +47,3 @@
 <p>The <code>begin</code> and <code>complete</code> options are callbacks that occur at the start and end of the doge animations.  What I'm doing here is changing the text of the button while the event occurs, and reverting it after it's complete.</p>
 
 <p>There are two more options that I'm not using here in the demo: <code>enterOn</code> (either 'click' or 'timer'.  'click' is the default) and <code>delayTime</code> (represented in milliseconds, is the length of time that the timer should run before the doge animation begins after the plugin code is run).  These two options can be used for surprises.</p>
-
-      </section>
-    </div>
-
-    
-  </body>
-</html>
