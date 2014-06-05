@@ -3,7 +3,7 @@ layout: default
 ---
 ## Too many goddamn bootstrap tabs make people whine about things
 
-The project I work on uses <a href="http://getbootstrap.com/" target="_blank">bootstrap</a>.  This was actually a decision I made because we were drowning under custom css for so many forms.  It's a pretty good framework, and a lot of the built in interface elements are super helpful.
+The project I work on uses <a href="http://getbootstrap.com/" target="_blank">bootstrap</a>.  This was actually a decision I made because we were drowning under custom css for so many forms.  It's a pretty good framework, and a lot of the built-in interface elements are super helpful.
 
 Unfortunately, it doesn't always fit with what you need.  See, I had a tabbed interface.  It was built with a server-side command that read through all the possible categories of settings an object could have.  Recently, I got to the point that some objects had over 12 or even 14 categories, which caused the tabs to wrap around.
 
