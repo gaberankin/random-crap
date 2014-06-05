@@ -4,3 +4,10 @@
   url: doge.html
   description: Ever wanted to annoy someone with a lame meme?
   linktext: Here you go.
+
+- title: Bootstrap tabs into a dropdown
+  image: images/facepalm.png
+  alttext: "FFFFFFFFFFFFFFFFF"
+  url: too-many-bootstrap-tabs.html
+  description: Too many bootstrap tabs?  Internet won't help?
+  linktext: Try doing it yourself and see where that gets you.
