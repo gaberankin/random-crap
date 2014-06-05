@@ -263,14 +263,19 @@ a {
   padding: 10px;
   font-size: 14px;
   color: #b5e853;
+  margin-bottom:3px;
 }
 .crap-image {
   width: 75px;
   display: inline-block;
   float: left;
 }
+.crap-image img {
+  max-width: 75px;
+}
 
 .crap-image + .crap-description {
   float: left;
   margin-left: 5px;
+  width: 498px;
 }
