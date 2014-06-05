@@ -1,1 +1,0 @@
-{% macro date_format(dateobj, format = '', tz_name = 'America/New_York') -%}{% if format != '' %}{{ pytz.utc.localize(dateobj).astimezone(pytz.timezone("America/New_York")).strftime(format) }}{% else %}{{ pytz.utc.localize(dateobj).astimezone(pytz.timezone("America/New_York")) }}{% endif %}{%- endmacro %}
