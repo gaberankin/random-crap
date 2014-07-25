@@ -1,0 +1,19 @@
+{
+  "name": "jquery.backwards",
+  "version": "0.1.0",
+  "description": "a stupid thing that I made that fucks with people's heads",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabe Rankin",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-coffee": "^0.10.1",
+    "grunt-contrib-watch": "~0.6.0"
+  }
+}
