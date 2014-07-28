@@ -1,0 +1,30 @@
+---
+layout: default
+extra_scripts:
+ - //code.jquery.com/jquery-1.11.0.min.js
+ - javascripts/jquery.backwards.min.js
+---
+<h2>I don't even know what is wrong with me.</h2>
+<p>Get typing.</p>
+<input type="text" id="igowronway" style="width:70%" />
+
+<p>So, evidently I am some sort of evil deviant with an <em>extremely bad</em> sense of humor</p>
+
+<p>I mean, I don't even know what caused this to occur to me, other than maybe trying to come up with ways to mess with my co-workers (or maybe 1 co-worker in particular?)</p>
+
+<hr />
+
+<p>It's a fairly simple jquery plugin, not much to it aside from 1 file (the jquery.backwards.js javascript file), not including the jquery requirement:</p>
+
+<pre><code>&lt;script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="javascripts/jquery.backwards.min.js"&gt;&lt;/script&gt;</code></pre>
+
+<p>The code for the above demo is thus:</p>
+
+<pre><code>$(document).ready(function(){
+  $('#igowrongway').backwards();
+});</code></pre>
+
+<p>I should note that I have only tested this in chrome, and even then, in a very simple CSS environment.  A lot of the plugin's initial work is spent trying to make the text it prints out look exactly like what the input would normally print, and I probably didn't do a very good job of it because I whipped this up in a span of about 30 minutes.</p>
+
+<p>On top of any browser issues, you will probably notice a significant lag as you type as well.  This is because of the work I'm doing to make the text go in the opposite direction.  I bet this is really dumb and there's a simple CSS way to do it that I'm not aware of.  d'oh well</p>
