@@ -37,7 +37,7 @@ var setup = function(){
 	// light.position.set(100 * (3/4),200 * (3/4),100 * (3/4));
 	scene.add(light);
 	scene.add(light2);
-	console.log(fpsInterval);
+
 	loader.load('./js/dumb-box.js', function (geometry, materials) {
 		skinnedMesh = new THREE.SkinnedMesh(geometry, new THREE.MeshFaceMaterial(materials));
 		// skinnedMesh.position.y = 50;
@@ -51,16 +51,23 @@ var setup = function(){
 
 	});
 
-	$(document).keydown(function(event){
-		console.log(event.which)
-		if(event.which == 87) {
-			camera.fov += 0.5;
-			camera.updateProjectionMatrix();
-		} else if(event.which == 83) {
-			camera.fov -= 0.5;
+	$('#fov').val(camera.fov).change(function(){
+		var val = parseFloat($(this).val().replace(/[^0-9\.]/g, ''));
+		if(val) {
+			camera.fov = val;
 			camera.updateProjectionMatrix();
 		}
-		$('#debug').text(camera.fov);
+	}).keydown(function(event){
+		var fov = parseFloat($('#fov').val().replace(/[^0-9\.]/g, ''));
+		if(event.which == 87) {
+			fov += 0.5;
+			$('#fov').val(fov).change();
+			event.preventDefault();
+		} else if(event.which == 83) {
+			fov -= 0.5;
+			$('#fov').val(fov).change();
+			event.preventDefault();
+		}
 	});
 
 };
