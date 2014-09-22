@@ -1,6 +1,11 @@
 (function($) {
-  var revString;
+  var getTime, revString, revString1, revString2, revString3, testString, tests;
+  testString = 'bingly bingly beep backwards';
   revString = function(str) {
+    return str;
+  };
+  "we have 3 different implementations of 1 thing.  this is because some browsers do better with \nsome implementations.";
+  revString1 = function(str) {
     var len, retVal, x, _i, _ref;
     len = str.length;
     retVal = '';
@@ -9,12 +14,76 @@
     }
     return retVal;
   };
+  revString2 = function(str) {
+    var retVal;
+    retVal = str.split('').reverse().join('');
+    return retVal;
+  };
+  revString3 = function(str) {
+    var halfIndex, i, len, retVal, s, tmp, _i;
+    s = str.split('');
+    len = s.length;
+    halfIndex = Math.floor(len / 2) - 1;
+    for (i = _i = 0; 0 <= halfIndex ? _i <= halfIndex : _i >= halfIndex; i = 0 <= halfIndex ? ++_i : --_i) {
+      tmp = s[len - i - 1];
+      s[len - i - 1] = s[i];
+      s[i] = tmp;
+    }
+    retVal = s.join('');
+    return retVal;
+  };
+  "Try to use the modern window.performance.now() for the performance test.";
+  if (window.performance !== void 0 && window.performance.now !== void 0) {
+    getTime = function() {
+      return window.performance.now();
+    };
+  } else {
+    getTime = function() {
+      return (new Date()).getTimestamp();
+    };
+  }
+  "Run the tests for each implementation";
+  tests = {
+    revString1: (function(str) {
+      var d, x, _i;
+      d = getTime();
+      for (x = _i = 0; _i <= 10; x = ++_i) {
+        revString1(str);
+      }
+      return getTime() - d;
+    })(testString),
+    revString2: (function(str) {
+      var d, x, _i;
+      d = getTime();
+      for (x = _i = 0; _i <= 10; x = ++_i) {
+        revString2(str);
+      }
+      return getTime() - d;
+    })(testString),
+    revString3: (function(str) {
+      var d, x, _i;
+      d = getTime();
+      for (x = _i = 0; _i <= 10; x = ++_i) {
+        revString3(str);
+      }
+      return getTime() - d;
+    })(testString)
+  };
+  if (tests.revString1 <= tests.revString2 && tests.revString1 <= tests.revString3) {
+    revString = revString1;
+  } else if (tests.revString2 <= tests.revString1 && tests.revString2 <= tests.revString3) {
+    revString = revString2;
+  } else if (tests.revString3 <= tests.revString1 && tests.revString3 <= tests.revString2) {
+    revString = revString3;
+  }
   return $.fn.backwards = function(options) {
     return this.filter(':input').keyup(function(e) {
       var $me, $parent;
       $me = $(this);
       $parent = $me.parent('.backwards-wrap');
       $('.backwards-text', $parent).text(revString($me.val()));
+      revString2($me.val());
+      revString3($me.val());
     }).css({
       'color': 'transparent'
     }).each(function() {
