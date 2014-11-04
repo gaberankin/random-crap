@@ -1,3 +1,5 @@
 exclude: ['doge', 'flask-test']
 timezone: 'America/New_York'
 markdown: kramdown
+kramdown:
+  input: GFM
