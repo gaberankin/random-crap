@@ -4,7 +4,11 @@
   revString = function(str) {
     return str;
   };
-  "we have 3 different implementations of 1 thing.  this is because some browsers do better with \nsome implementations.";
+
+  /*
+  	we have 3 different implementations of 1 thing.  this is because some browsers do better with 
+  	some implementations.
+   */
   revString1 = function(str) {
     var len, retVal, x, _i, _ref;
     len = str.length;
@@ -32,7 +36,10 @@
     retVal = s.join('');
     return retVal;
   };
-  "Try to use the modern window.performance.now() for the performance test.";
+
+  /*
+  	Try to use the modern window.performance.now() for the performance test.
+   */
   if (window.performance !== void 0 && window.performance.now !== void 0) {
     getTime = function() {
       return window.performance.now();
@@ -42,7 +49,10 @@
       return (new Date()).getTimestamp();
     };
   }
-  "Run the tests for each implementation";
+
+  /*
+  	Run the tests for each implementation
+   */
   tests = {
     revString1: (function(str) {
       var d, x, _i;

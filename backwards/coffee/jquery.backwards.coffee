@@ -5,10 +5,10 @@
 	revString = (str) ->
 		str
 
-	"""
+	###
 	we have 3 different implementations of 1 thing.  this is because some browsers do better with 
 	some implementations.
-	"""
+	###
 	revString1 = (str) ->
 		len = str.length;
 		retVal = ''		
@@ -31,9 +31,9 @@
 		retVal = s.join('')
 		retVal
 
-	"""
+	###
 	Try to use the modern window.performance.now() for the performance test.
-	"""
+	###
 	if window.performance isnt undefined and window.performance.now isnt undefined
 		getTime = () ->
 			return window.performance.now()
@@ -41,9 +41,9 @@
 		getTime = () ->
 			return (new Date()).getTimestamp()
 
-	"""
+	###
 	Run the tests for each implementation
-	"""
+	###
 	tests = 
 		revString1: ((str) ->
 			d = getTime()
