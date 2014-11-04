@@ -11,3 +11,10 @@
   url: too-many-bootstrap-tabs.html
   description: Too many bootstrap tabs?  Internet won't help?
   linktext: Try doing it yourself and see where that gets you.
+
+- title: Sometimes I can be a real jerk
+  image: images/jerk.png
+  alttext: "gnineppah si tahw"
+  url: backwards.html
+  description: Here's something that isn't funny at all.  Mess with the inputs of your website's forms so
+  linktext: everything is typed in backwards.

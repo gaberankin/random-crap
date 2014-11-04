@@ -2,11 +2,12 @@
 layout: default
 extra_scripts:
  - //code.jquery.com/jquery-1.11.0.min.js
- - javascripts/jquery.backwards.min.js
+ - //cdn.rawgit.com/gaberankin/random-crap/master/backwards/js/app.js
+ - //cdn.rawgit.com/gaberankin/random-crap/master/backwards/js/jquery.backwards.js
 ---
 <h2>I don't even know what is wrong with me.</h2>
 <p>Get typing.</p>
-<input type="text" id="igowrongway" style="width:300px" />
+<input type="text" id="test" style="width:300px; color: #000;" />
 
 <p>So, evidently I am some sort of evil deviant with an <em>extremely bad</em> sense of humor</p>
 
@@ -22,7 +23,7 @@ extra_scripts:
 <p>The code for the above demo is thus:</p>
 
 <pre><code>$(document).ready(function(){
-  $('#igowrongway').backwards();
+  $('#test').backwards();
 });</code></pre>
 
 <p>I should note that I have only tested this in chrome, and even then, in a very simple CSS environment.  A lot of the plugin's initial work is spent trying to make the text it prints out look exactly like what the input would normally print, and I probably didn't do a very good job of it because I whipped this up in a span of about 30 minutes.</p>
