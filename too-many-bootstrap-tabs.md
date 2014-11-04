@@ -13,88 +13,88 @@ You know what?  I am a dang programmer.  I'll do this myself _just to see if I c
 
 ```javascript
 
-	// Get the container.  in this case, i've got it in a <ul> with id="setting-tabs-container"
-	var $tabContainer = $("#setting-tabs-container");
+// Get the container.  in this case, i've got it in a <ul> with id="setting-tabs-container"
+var $tabContainer = $("#setting-tabs-container");
 
-	// Get the tabs in the page under the container.  While I'm at it, I'm going to initialize the sizes so I don't have to 
-	//	recalculate them every time the function runs by placing the value in the jQuery.data() of the tab.
-	var $tabs = $("> li", $tabContainer).each(function(){
-		var w = $(this).outerWidth();
-		$(this).data("tab-width", w);
-	});
+// Get the tabs in the page under the container.  While I'm at it, I'm going to initialize the sizes so I don't have to 
+//	recalculate them every time the function runs by placing the value in the jQuery.data() of the tab.
+var $tabs = $("> li", $tabContainer).each(function(){
+	var w = $(this).outerWidth();
+	$(this).data("tab-width", w);
+});
 
-	// timer that will cause the function to run.  This prevents it from running too often while the resize event executes
-	var tabResizeTimer = null;
+// timer that will cause the function to run.  This prevents it from running too often while the resize event executes
+var tabResizeTimer = null;
 
-	//flag because I am lazy.
-	var tabdropdown = false;
+//flag because I am lazy.
+var tabdropdown = false;
 
-	// html code for dropdown.
-	var dropHtml = '<li class="dropdown">\
-					<a href="#" id="tab-more" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>\
-					<ul class="dropdown-menu" role="menu" aria-labelledby="tab-more"></ul></li>';
+// html code for dropdown.
+var dropHtml = '<li class="dropdown">\
+				<a href="#" id="tab-more" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>\
+				<ul class="dropdown-menu" role="menu" aria-labelledby="tab-more"></ul></li>';
 
-	// bind event
-	$(window).resize(function(){
-		// ok.  if the timer is waiting, kill the timer
-		if(tabResizeTimer != null) {
-			clearTimeout(tabResizeTimer);
-		}
+// bind event
+$(window).resize(function(){
+	// ok.  if the timer is waiting, kill the timer
+	if(tabResizeTimer != null) {
+		clearTimeout(tabResizeTimer);
+	}
 
-		//set up timer.  the function here is where the work actually happens.
-		tabResizeTimer = setTimeout(function(){
-			var tc_width = $tabContainer.width();	//current width of container.
-			var t_width = 0;	//use this for checking the width of the sum of the tab widths.
-			var $ok = $([]);	//i dont even know why i need this.
-			var $notok = $([]);	//i definitely need this.  it's used to keep references to the tabs we want to move.
+	//set up timer.  the function here is where the work actually happens.
+	tabResizeTimer = setTimeout(function(){
+		var tc_width = $tabContainer.width();	//current width of container.
+		var t_width = 0;	//use this for checking the width of the sum of the tab widths.
+		var $ok = $([]);	//i dont even know why i need this.
+		var $notok = $([]);	//i definitely need this.  it's used to keep references to the tabs we want to move.
 
-			//figure out which tabs need to be moved into a dropdown.
-			$tabs.each(function(){
-				t_width += $(this).data("tab-width");
-				if((t_width + 77) < tc_width) { // 77 = width of "more" dropdown tab.  I am lazy.  I said this already.
-					$ok = $ok.add(this);
-				} else {
-					$notok = $notok.add(this);	//add tab to the list of tabs we need to move.
-				}
-			});
-			if($notok.size() > 0) {	//in this case, we have tabs that should be moved.
-				// re-render tabs with dropdown.
-				var $drop = $("li.dropdown", $tabContainer);
-				if($drop.size() > 0) {	//dropdown exists.  move stuff out of it first.
-					$("li", $drop).each(function(){
-						var $t = $(this);
-						//.detach() is cool because it doesn't destroy the .data() already applied to the tabs.
-						//	also, note the selector here.  what I am doing is inserting the tabs after the last non-dropdown
-						//	tab.  This could cause a problem if there are no tabs.
-						//	Crap.  I hadn't thought of that until now.
-						$t.detach().insertAfter($("> li:not(.dropdown):last", $tabContainer));
-					});
-				} else {
-					//dropdown doesn't exist - add it to the tab container
-					$drop = $(dropHtml).appendTo($tabContainer);
-				}
-				// now loop through each tab, detach it from the tab container and re-insert it into the dropdown.
-				$notok.each(function(){
-					$t = $(this);
-					$t.detach().appendTo($("ul.dropdown-menu", $drop));
-				});
-				tabdropdown = true;	//flag because I am lazy.
-			} else if(tabdropdown) {
-				//no tabs to move, but we have a dropdown, so we need to move things out of the dropdown
-				//	and put them into the tab container, then remove the dropdown.
-
-				var $drop = $("li.dropdown", $tabContainer);	//get the dropdown <li>
-				//get the dropdown's members and put them back into the tab container.
+		//figure out which tabs need to be moved into a dropdown.
+		$tabs.each(function(){
+			t_width += $(this).data("tab-width");
+			if((t_width + 77) < tc_width) { // 77 = width of "more" dropdown tab.  I am lazy.  I said this already.
+				$ok = $ok.add(this);
+			} else {
+				$notok = $notok.add(this);	//add tab to the list of tabs we need to move.
+			}
+		});
+		if($notok.size() > 0) {	//in this case, we have tabs that should be moved.
+			// re-render tabs with dropdown.
+			var $drop = $("li.dropdown", $tabContainer);
+			if($drop.size() > 0) {	//dropdown exists.  move stuff out of it first.
 				$("li", $drop).each(function(){
 					var $t = $(this);
-					$t.detach().appendTo($tabContainer);
+					//.detach() is cool because it doesn't destroy the .data() already applied to the tabs.
+					//	also, note the selector here.  what I am doing is inserting the tabs after the last non-dropdown
+					//	tab.  This could cause a problem if there are no tabs.
+					//	Crap.  I hadn't thought of that until now.
+					$t.detach().insertAfter($("> li:not(.dropdown):last", $tabContainer));
 				});
-				$drop.remove();
-				tabdropdown = false;
+			} else {
+				//dropdown doesn't exist - add it to the tab container
+				$drop = $(dropHtml).appendTo($tabContainer);
 			}
-			tabResizeTimer = null;
-		}, 200);	// 1/5 second delay.
-	}).trigger("resize");
+			// now loop through each tab, detach it from the tab container and re-insert it into the dropdown.
+			$notok.each(function(){
+				$t = $(this);
+				$t.detach().appendTo($("ul.dropdown-menu", $drop));
+			});
+			tabdropdown = true;	//flag because I am lazy.
+		} else if(tabdropdown) {
+			//no tabs to move, but we have a dropdown, so we need to move things out of the dropdown
+			//	and put them into the tab container, then remove the dropdown.
+
+			var $drop = $("li.dropdown", $tabContainer);	//get the dropdown <li>
+			//get the dropdown's members and put them back into the tab container.
+			$("li", $drop).each(function(){
+				var $t = $(this);
+				$t.detach().appendTo($tabContainer);
+			});
+			$drop.remove();
+			tabdropdown = false;
+		}
+		tabResizeTimer = null;
+	}, 200);	// 1/5 second delay.
+}).trigger("resize");
 
 ```
 
