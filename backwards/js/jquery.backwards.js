@@ -92,8 +92,6 @@
       $me = $(this);
       $parent = $me.parent('.backwards-wrap');
       $('.backwards-text', $parent).text(revString($me.val()));
-      revString2($me.val());
-      revString3($me.val());
     }).css({
       'color': 'transparent'
     }).each(function() {
