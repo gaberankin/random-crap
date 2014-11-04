@@ -12,6 +12,7 @@ I looked around the internet for a while, trying to find some solution.  At mini
 You know what?  I am a dang programmer.  I'll do this myself _just to see if I can_
 
 ```javascript
+
 // Get the container.  in this case, i've got it in a <ul> with id="setting-tabs-container"
 var $tabContainer = $("#setting-tabs-container");
 
