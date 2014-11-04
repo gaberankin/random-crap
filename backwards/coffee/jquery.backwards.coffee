@@ -75,7 +75,7 @@
 			$parent = $me.parent('.backwards-wrap')
 			$('.backwards-text', $parent).text(revString($me.val()));
 			return
-		).css({'color':'transparent'}).each(() ->
+		).each(() ->
 			$me = $(this)
 			left = (($me.outerWidth() - $me.width()) / 2) + parseInt($me.css('margin-left'))
 			top = (($me.outerHeight() - $me.height()) / 2) + parseInt($me.css('margin-top'))
@@ -105,6 +105,10 @@
 				$text.css('font-weight', $me.css('font-weight'))
 			if $me.css('font-style')
 				$text.css('font-style', $me.css('font-style'))
+			if $me.css('color')
+				$text.css('color', $me.css('color'))
+			else
+				$text.css('color', '#000')
 
 			$me.css({
 				position: 'absolute',
@@ -115,6 +119,6 @@
 				# height: $me.outerHeight()
 			})
 			return
-		)
+		).css({'color':'transparent'})
 
 ) jQuery

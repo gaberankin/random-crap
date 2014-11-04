@@ -43,6 +43,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	// Default task(s).
-	grunt.registerTask('default', ['coffee','jade','uglify']);
+	grunt.registerTask('default', ['coffee','uglify']);
 
 };

@@ -92,8 +92,6 @@
       $me = $(this);
       $parent = $me.parent('.backwards-wrap');
       $('.backwards-text', $parent).text(revString($me.val()));
-    }).css({
-      'color': 'transparent'
     }).each(function() {
       var $me, $parent, $text, left, top;
       $me = $(this);
@@ -129,6 +127,11 @@
       if ($me.css('font-style')) {
         $text.css('font-style', $me.css('font-style'));
       }
+      if ($me.css('color')) {
+        $text.css('color', $me.css('color'));
+      } else {
+        $text.css('color', '#000');
+      }
       $me.css({
         position: 'absolute',
         zIndex: 1
@@ -136,6 +139,8 @@
       $parent.css({
         width: $me.outerWidth()
       });
+    }).css({
+      'color': 'transparent'
     });
   };
 })(jQuery);
