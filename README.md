@@ -2,6 +2,7 @@ random-crap
 ===========
 
 Nothing to see here.  just me, experimenting with things.
+Also, very very sorry about all the coffeescript.  i have since seen the light and now write es6.
 
 timeline guffins
 ----------------
